@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Register Page";
+}
+<div class="form-signin w-100 m-auto">
+    <form method="post" asp-controller="Register" asp-action="Index">
+        <h1 class="h3 mb-3 fw-normal">Sign Up</h1>
+        <div class="form-floating">
+            <input type="text" class="form-control" id="UserName" name="UserName"
+                   placeholder="username"> <label for="floatingInput">Username</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="Password" name="Password"
+                   placeholder="Password"> <label for="floatingPassword">Password</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword"
+                   placeholder="Password Again"> <label for="floatingPassword">Password Again</label>
+        </div>
+        <div class="form-floating">
+            <input type="tel" class="form-control" id="Telephone" name="Telephone"
+                   placeholder="name@example.com"> <label for="floatingInput">Telephone</label>
+        </div>
+        <div class="form-floating">
+            <input type="email" class="form-control" id="Email" name="Email"
+                   placeholder="name@example.com"> <label for="floatingInput">Email address</label>
+        </div>
+        <div>
+            <button class="btn btn-primary w-100 py-2" type="submit">Sign up</button>
+            <a class=""
+        </div>
+    </form>
+</div>

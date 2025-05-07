@@ -74,7 +74,7 @@ namespace Services
 
             if (userByUsername == null)
             {
-                var userByEmail = await _repositoryManager.User.FindAllByConditionAsync(u => u.E_Mail == userDTO.Email, trackChanges);
+                var userByEmail = await _repositoryManager.User.FindByConditionAsync(u => u.E_Mail == userDTO.Email, trackChanges);
                 if (userByEmail == null)
                 {
                     User user = new()
