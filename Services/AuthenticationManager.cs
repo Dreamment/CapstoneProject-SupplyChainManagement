@@ -49,7 +49,7 @@ namespace Services
             }
             loginResult.LoginStatus = LoginStatus.Success;
             loginResult.Message = "Login Success";
-            loginResult.Token = await CreateTokenAsync(user);
+            //loginResult.Token = await CreateTokenAsync(user);
 
             return loginResult;
         }
@@ -109,23 +109,23 @@ namespace Services
             return registerResult;
         }
 
-        private async Task<string> CreateTokenAsync(User user)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("your_secret_key_here"); // Replace with your actual secret key
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(
-                [
-                    new Claim(ClaimTypes.NameIdentifier, user.User_Name),
-                    new Claim(ClaimTypes.Email, user.E_Mail),
-                    new Claim(ClaimTypes.Role, user.Role_Name)
-                ]),
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
+        //private async Task<string> CreateTokenAsync(User user)
+        //{
+        //    var tokenHandler = new JwtSecurityTokenHandler();
+        //    var key = Encoding.ASCII.GetBytes("your_secret_key_here"); // Replace with your actual secret key
+        //    var tokenDescriptor = new SecurityTokenDescriptor
+        //    {
+        //        Subject = new ClaimsIdentity(
+        //        [
+        //            new Claim(ClaimTypes.NameIdentifier, user.User_Name),
+        //            new Claim(ClaimTypes.Email, user.E_Mail),
+        //            new Claim(ClaimTypes.Role, user.Role_Name)
+        //        ]),
+        //        Expires = DateTime.UtcNow.AddHours(1),
+        //        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        //    };
+        //    var token = tokenHandler.CreateToken(tokenDescriptor);
+        //    return tokenHandler.WriteToken(token);
+        //}
     }
 }

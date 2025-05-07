@@ -2,19 +2,6 @@
 {
     public class LoginUserDTO
     {
-        public LoginUserDTO(string userNameOrEmail, string password, bool isEmail = false)
-        {
-            if (isEmail)
-            {
-                Email = userNameOrEmail;
-            }
-            else
-            {
-                UserName = userNameOrEmail;
-            }
-            Password = password;
-            IsEmail = isEmail;
-        }
 
         public string? UserName { get; set; }
         public string? Email { get; set; }
