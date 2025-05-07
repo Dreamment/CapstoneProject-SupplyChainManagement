@@ -1,4 +1,5 @@
-﻿using Repositories.Contratcs;
+﻿using Microsoft.EntityFrameworkCore;
+using Repositories.Contratcs;
 using System.Linq.Expressions;
 
 namespace Repositories.EFCore
@@ -15,44 +16,63 @@ namespace Repositories.EFCore
         public async Task CreateAsync(T entity)
             => await _context.Set<T>().AddAsync(entity);
 
-        public Task DeleteAsync(T entity)
+        public async Task DeleteAsync(T entity)
+            => await Task.Run(() => _context.Set<T>().Remove(entity));
+
+        public async Task<IEnumerable<T>> FindAllAsync(bool trackChanges)
+            => !trackChanges ?
+            await _context.Set<T>().AsNoTracking().ToListAsync() :
+            await _context.Set<T>().ToListAsync();
+
+        public async Task<IEnumerable<T>> FindAllByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges)
+            => trackChanges ?
+            await _context.Set<T>().Where(expression).ToListAsync() :
+            await _context.Set<T>().AsNoTracking().Where(expression).ToListAsync();
+
+        public async Task<IEnumerable<T>> FindAllByConditionWithDetailsAsync(Expression<Func<T, bool>> expression, bool trackChanges, params Expression<Func<T, object>>[] includes)
         {
-            throw new NotImplementedException();
+            var query = _context.Set<T>().AsQueryable();
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return !trackChanges ?
+                await query.AsNoTracking().Where(expression).ToListAsync() :
+                await query.Where(expression).ToListAsync();
         }
 
-        public Task<IEnumerable<T>> FindAllAsync(bool trackChanges)
+        public async Task<IEnumerable<T>> FindAllWithDetailsAsync(bool trackChanges, params Expression<Func<T, object>>[] includes)
         {
-            throw new NotImplementedException();
+            var query = _context.Set<T>().AsQueryable();
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return !trackChanges ?
+                await query.AsNoTracking().ToListAsync() :
+                await query.ToListAsync();
         }
 
-        public Task<IEnumerable<T>> FindAllByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges)
+        public async Task<T> FindByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges)
+#pragma warning disable CS8603 // Possible null reference return.
+            => trackChanges ?
+                await _context.Set<T>().Where(expression).FirstOrDefaultAsync() :
+                await _context.Set<T>().AsNoTracking().Where(expression).FirstOrDefaultAsync();
+#pragma warning restore CS8603 // Possible null reference return.
+
+        public async Task<T> FindByConditionWithDetailsAsync(Expression<Func<T, bool>> expression, bool trackChanges, params Expression<Func<T, object>>[] includes)
         {
-            throw new NotImplementedException();
+            var query = _context.Set<T>().AsQueryable();
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return trackChanges ?
+                await query.Where(expression).FirstOrDefaultAsync() :
+                await query.AsNoTracking().Where(expression).FirstOrDefaultAsync();
         }
 
-        public Task<IEnumerable<T>> FindAllByConditionWithDetailsAsync(Expression<Func<T, bool>> expression, bool trackChanges, params Expression<Func<T, object>>[] includes)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<T>> FindAllWithDetailsAsync(bool trackChanges, params Expression<Func<T, object>>[] includes)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<T> FindByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<T> FindByConditionWithDetailsAsync(Expression<Func<T, bool>> expression, bool trackChanges, params Expression<Func<T, object>>[] includes)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(T entity)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task UpdateAsync(T entity)
+            => await Task.Run(() => _context.Set<T>().Update(entity));
     }
 }
