@@ -1,10 +1,13 @@
 ﻿using Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Repositories.Config;
 using System.Reflection;
 
 namespace Repositories.EFCore
 {
-    public class RepositoryContext : DbContext
+    public class RepositoryContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         public RepositoryContext(DbContextOptions options) : base(options)
         {
@@ -24,20 +27,18 @@ namespace Repositories.EFCore
         public DbSet<Tender> Tenders { get; set; }
         public DbSet<User> Users { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            base.OnModelCreating(builder);
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            modelBuilder.Entity<Bid>()
-                .HasOne(b => b.Tender)
-                .WithMany(t => t.Bids)
-                .HasForeignKey(b => b.TenderID);
+            var roleIds = new List<Guid>
+            {
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+            };
 
-            modelBuilder.Entity<Bid>()
-                .HasOne(b => b.Supplier)
-                .WithMany(s => s.Bids)
-                .HasForeignKey(b => b.SupplierID);
+            builder.ApplyConfiguration(new RoleConfiguration(roleIds));
         }
     }
 }

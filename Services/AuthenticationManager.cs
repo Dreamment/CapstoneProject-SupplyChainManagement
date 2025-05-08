@@ -2,6 +2,8 @@
 using Entities.DataTransferObjects.Auth;
 using Entities.Enums;
 using Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Repositories.Contratcs;
 using Services.Contracts;
@@ -14,10 +16,20 @@ namespace Services
     public class AuthenticationManager : IAuthenticationService
     {
         private readonly IRepositoryManager _repositoryManager;
+        //private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+        private readonly UserManager<User> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public AuthenticationManager(IRepositoryManager repositoryManager)
+        public AuthenticationManager(
+            IRepositoryManager repositoryManager,
+            //RoleManager<IdentityRole<Guid>> roleManager,
+            UserManager<User> userManager,
+            IConfiguration configuration)
         {
             _repositoryManager = repositoryManager;
+            _userManager = userManager;
+            _configuration = configuration;
+            //_roleManager = roleManager;
         }
 
         public async Task<LoginResult> LoginAsync(LoginUserDTO userDTO, bool trackChanges)
@@ -28,14 +40,14 @@ namespace Services
                 UserName = userDTO.UserName,
             };
 
-            var user = await _repositoryManager.User.FindByConditionAsync(u => u.User_Name == userDTO.UserName || u.E_Mail == userDTO.Email, trackChanges);
+            var user = await _repositoryManager.User.FindByConditionAsync(u => u.UserName == userDTO.UserName || u.Email == userDTO.Email, trackChanges);
             if (user == null)
             {
                 loginResult.LoginStatus = LoginStatus.UserNotFound;
                 loginResult.Message = "User Not Found";
                 return loginResult;
             }
-            if (user.Password != userDTO.Password)
+            if (user.PasswordHash != userDTO.Password)
             {
                 loginResult.LoginStatus = LoginStatus.WrongPassword;
                 loginResult.Message = "Wrong Password";
@@ -49,7 +61,7 @@ namespace Services
             }
             loginResult.LoginStatus = LoginStatus.Success;
             loginResult.Message = "Login Success";
-            //loginResult.Token = await CreateTokenAsync(user);
+            loginResult.Token = await CreateTokenAsync(user);
 
             return loginResult;
         }
@@ -70,19 +82,22 @@ namespace Services
                 return registerResult;
             }
 
-            var userByUsername = await _repositoryManager.User.FindByConditionAsync(u => u.User_Name == userDTO.UserName, trackChanges);
+            var userByUsername = await _repositoryManager.User.FindByConditionAsync(u => u.UserName == userDTO.UserName, trackChanges);
 
             if (userByUsername == null)
             {
-                var userByEmail = await _repositoryManager.User.FindByConditionAsync(u => u.E_Mail == userDTO.Email, trackChanges);
+                var userByEmail = await _repositoryManager.User.FindByConditionAsync(u => u.Email == userDTO.Email, trackChanges);
                 if (userByEmail == null)
                 {
                     User user = new()
                     {
-                        User_Name = userDTO.UserName,
-                        Password = userDTO.Password,
-                        Telephone = userDTO.Telephone,
-                        E_Mail = userDTO.Email,
+                        Id = Guid.NewGuid(),
+                        UserName = userDTO.UserName,
+                        NormalizedUserName = userDTO.UserName.ToUpper(),
+                        PasswordHash = userDTO.Password,
+                        PhoneNumber = userDTO.Telephone,
+                        Email = userDTO.Email,
+                        NormalizedEmail = userDTO.Email.ToUpper(),
                         Role_Name = "User",
                         Salary = 20000,
                         Status = true
@@ -90,9 +105,11 @@ namespace Services
 
                     await _repositoryManager.User.CreateAsync(user);
                     await _repositoryManager.SaveAsync();
+                    await _userManager.AddToRoleAsync(user, user.Role_Name);
+                    await _repositoryManager.SaveAsync();
 
                     registerResult.RegisterStatus = RegisterStatus.Success;
-                    registerResult.Message = $"User with{user.User_Name} username has enrolled to the system.";
+                    registerResult.Message = $"User with{user.UserName} username has enrolled to the system.";
                 }
                 else
                 {
@@ -109,23 +126,47 @@ namespace Services
             return registerResult;
         }
 
-        //private async Task<string> CreateTokenAsync(User user)
-        //{
-        //    var tokenHandler = new JwtSecurityTokenHandler();
-        //    var key = Encoding.ASCII.GetBytes("your_secret_key_here"); // Replace with your actual secret key
-        //    var tokenDescriptor = new SecurityTokenDescriptor
-        //    {
-        //        Subject = new ClaimsIdentity(
-        //        [
-        //            new Claim(ClaimTypes.NameIdentifier, user.User_Name),
-        //            new Claim(ClaimTypes.Email, user.E_Mail),
-        //            new Claim(ClaimTypes.Role, user.Role_Name)
-        //        ]),
-        //        Expires = DateTime.UtcNow.AddHours(1),
-        //        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        //    };
-        //    var token = tokenHandler.CreateToken(tokenDescriptor);
-        //    return tokenHandler.WriteToken(token);
-        //}
+        private async Task<string> CreateTokenAsync(User user)
+        {
+            var signingCredentials = GetSigningCredentials(user);
+            var claims = await GetClaims(user);
+            var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
+            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+        }
+
+        private SigningCredentials GetSigningCredentials(User user)
+        {
+            var jwtSettings = _configuration.GetSection("JwtSettings");
+            var key = Encoding.UTF8.GetBytes(jwtSettings["secretKey"]);
+            var secret = new SymmetricSecurityKey(key);
+            return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
+        }
+
+        private async Task<List<Claim>> GetClaims(User user)
+        {
+            var claims = new List<Claim>
+            {
+                new(ClaimTypes.Name, user.UserName)
+            };
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            foreach (var role in roles)
+                claims.Add(new Claim(ClaimTypes.Role, role));
+
+            return claims;
+        }
+
+        private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
+        {
+            var jwtSettings = _configuration.GetSection("JwtSettings");
+
+            return new JwtSecurityToken(
+                issuer: jwtSettings["validIssuer"],
+                audience: jwtSettings["validAudience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expirationInMinutes"])),
+                signingCredentials: signingCredentials);
+        }
     }
 }

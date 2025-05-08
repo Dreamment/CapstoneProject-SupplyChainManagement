@@ -1,23 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace Entities.Models
 {
-    [Table("Users")]
-    public class User 
+    public class User : IdentityUser <Guid>
     {
-        [Key]
-        [MaxLength(150)]
-        public string User_Name { get; set; }
-
-        [MaxLength(40)]
-        public string Password { get; set; }
-
-        [MaxLength(40)]
-        public string Telephone { get; set; }
-
-        [MaxLength(240)]
-        public string E_Mail { get; set; }
 
         [MaxLength(240)]
         public string Role_Name { get; set; }

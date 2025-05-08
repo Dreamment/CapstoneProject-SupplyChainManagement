@@ -7,9 +7,6 @@ namespace Entities.Models
     public class Supplier
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int SupplierID { get; set; }
-
         [MaxLength(240)]
         public string Supplier_Name { get; set; }
 

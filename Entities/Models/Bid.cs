@@ -14,7 +14,8 @@ namespace Entities.Models
         public int TenderID { get; set; }
 
         [Required]
-        public int SupplierID { get; set; }
+        [MaxLength(240)]
+        public string Supplier_Name { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(15,2)")]

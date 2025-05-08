@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Contratcs;
 using Repositories.EFCore;
 using Services;
@@ -17,6 +19,16 @@ namespace MVCApp.Extensions
         {
             services.AddScoped<IAuthenticationService, AuthenticationManager>();
             services.AddScoped<IRepositoryManager, RepositoryManager>();
+        }
+
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            services.AddIdentity<User, IdentityRole<Guid>>( options =>
+                { 
+                    options.User.RequireUniqueEmail = true;
+                })
+                .AddEntityFrameworkStores<RepositoryContext>()
+                .AddDefaultTokenProviders();
         }
     }
 }

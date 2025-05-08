@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.ConfigureCustomServices();
+builder.Services.ConfigureIdentity();
 
 var app = builder.Build();
 
