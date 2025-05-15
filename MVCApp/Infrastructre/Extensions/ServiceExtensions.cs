@@ -19,6 +19,7 @@ namespace MVCApp.Infrastructre.Extensions
         {
             services.AddScoped<IAuthService, AuthenticationManager>();
             services.AddScoped<IRepositoryManager, RepositoryManager>();
+            services.AddScoped<ITenderService, TenderManager>();
         }
 
         public static void ConfigureIdentity(this IServiceCollection services)
