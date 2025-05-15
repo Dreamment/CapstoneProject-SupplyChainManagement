@@ -1,12 +1,16 @@
-using MVCApp.Extensions;
+using MVCApp.Infrastructre.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.ConfigureSqlContext(builder.Configuration);
+builder.Services.ConfigureSession();
 builder.Services.ConfigureCustomServices();
 builder.Services.ConfigureIdentity();
+builder.Services.ConfigureRouting();
+
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
@@ -18,11 +22,13 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseSession();
 
+app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

@@ -6,7 +6,7 @@ using Repositories.EFCore;
 using Services;
 using Services.Contracts;
 
-namespace MVCApp.Extensions
+namespace MVCApp.Infrastructre.Extensions
 {
     public static class ServiceExtensions
     {
@@ -17,7 +17,7 @@ namespace MVCApp.Extensions
 
         public static void ConfigureCustomServices(this IServiceCollection services)
         {
-            services.AddScoped<IAuthenticationService, AuthenticationManager>();
+            services.AddScoped<IAuthService, AuthenticationManager>();
             services.AddScoped<IRepositoryManager, RepositoryManager>();
         }
 
@@ -26,9 +26,32 @@ namespace MVCApp.Extensions
             services.AddIdentity<User, IdentityRole<Guid>>( options =>
                 { 
                     options.User.RequireUniqueEmail = true;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
                 })
                 .AddEntityFrameworkStores<RepositoryContext>()
                 .AddDefaultTokenProviders();
+        }
+
+        public static void ConfigureSession(this IServiceCollection services)
+        {
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = "LoginCookie";
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        }
+
+        public static void ConfigureRouting(this IServiceCollection services)
+        {
+            services.AddRouting(options =>
+            {
+                options.LowercaseUrls = true;
+            });
         }
     }
 }

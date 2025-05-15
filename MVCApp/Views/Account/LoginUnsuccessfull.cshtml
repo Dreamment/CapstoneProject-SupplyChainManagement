@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Successfull Login Page";
+    ViewData["Title"] = "UnSuccessfull Login Page";
 }
 @model (LoginResult LoginResult, LoginUserDTO UserDTO)
 
@@ -30,14 +30,14 @@
 
             // Redirect to home page when the modal is closed
             document.getElementById('UnsuccessfullLoginModal').addEventListener('hidden.bs.modal', function () {
-                window.location.href = '/Login';
+                window.location.href = '/Account/Login';
             });
         });
     </script>
 }
 
 <div class="form-signin w-100 m-auto">
-    <form method="post">
+    <form>
         <h1 class="h3 mb-3 fw-normal">Sign In</h1>
         <div class="form-floating">
             <input type="text" class="form-control" id="UserName"

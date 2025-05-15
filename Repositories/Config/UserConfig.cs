@@ -1,12 +1,17 @@
 ﻿using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Reflection.Emit;
 
 namespace Repositories.Config
 {
     public class UserConfig : IEntityTypeConfiguration<User>
     {
+        private readonly Guid _userId;
+
+        public UserConfig(Guid userId)
+        {
+            _userId = userId;
+        }
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.ToTable("Users");
@@ -20,8 +25,7 @@ namespace Repositories.Config
                 .HasColumnType("nvarchar(150)");
 
             builder.Property(u => u.PasswordHash)
-                .HasColumnName("Password")
-                .HasColumnType("nvarchar(40)");
+                .HasColumnName("Password");
 
             builder.Property(u => u.Email)
                 .HasColumnName("E_Mail")
@@ -46,6 +50,20 @@ namespace Repositories.Config
             builder.Property(u => u.SecurityStamp)
                 .HasDefaultValueSql("NEWID()")
                 .ValueGeneratedOnAddOrUpdate();
+
+            builder.HasData(
+                new User
+                {
+                    Id = _userId,
+                    UserName = "Admin",
+                    NormalizedUserName = "ADMIN",
+                    PasswordHash = "AQAAAAEAACcQAAAAEK1UJlTVFUSnIG7wzErpGrmGlG8/+UwZiCkLEhu8cP+XpYYMznxyZc2sVPsFN3Aytw==",
+                    Email = "admin@admin.com",
+                    NormalizedEmail = "ADMIN@ADMIN.COM",
+                    PhoneNumber = "123456789",
+                    Role_Name = "Admin",
+                    Status = true,
+                });
         }
     }
 }

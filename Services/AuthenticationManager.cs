@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Services
 {
-    public class AuthenticationManager : IAuthenticationService
+    public class AuthenticationManager : IAuthService
     {
         private readonly IRepositoryManager _repositoryManager;
         //private readonly RoleManager<IdentityRole<Guid>> _roleManager;
@@ -40,14 +40,14 @@ namespace Services
                 UserName = userDTO.UserName,
             };
 
-            var user = await _repositoryManager.User.FindByConditionAsync(u => u.UserName == userDTO.UserName || u.Email == userDTO.Email, trackChanges);
+            var user = await _userManager.FindByNameAsync(userDTO.UserName);
             if (user == null)
             {
                 loginResult.LoginStatus = LoginStatus.UserNotFound;
                 loginResult.Message = "User Not Found";
                 return loginResult;
             }
-            if (user.PasswordHash != userDTO.Password)
+            if (await _userManager.CheckPasswordAsync(user, userDTO.Password) == false)
             {
                 loginResult.LoginStatus = LoginStatus.WrongPassword;
                 loginResult.Message = "Wrong Password";
@@ -61,7 +61,6 @@ namespace Services
             }
             loginResult.LoginStatus = LoginStatus.Success;
             loginResult.Message = "Login Success";
-            loginResult.Token = await CreateTokenAsync(user);
 
             return loginResult;
         }
@@ -94,7 +93,6 @@ namespace Services
                         Id = Guid.NewGuid(),
                         UserName = userDTO.UserName,
                         NormalizedUserName = userDTO.UserName.ToUpper(),
-                        PasswordHash = userDTO.Password,
                         PhoneNumber = userDTO.Telephone,
                         Email = userDTO.Email,
                         NormalizedEmail = userDTO.Email.ToUpper(),
@@ -103,10 +101,20 @@ namespace Services
                         Status = true
                     };
 
-                    await _repositoryManager.User.CreateAsync(user);
-                    await _repositoryManager.SaveAsync();
-                    await _userManager.AddToRoleAsync(user, user.Role_Name);
-                    await _repositoryManager.SaveAsync();
+                    var result = await _userManager.CreateAsync(user, userDTO.Password);
+                    if (result.Succeeded)
+                        await _userManager.AddToRoleAsync(user, user.Role_Name);
+                    else
+                    {
+                        registerResult.RegisterStatus = RegisterStatus.UnknownError;
+                        var errors = result.Errors.ToList();
+                        registerResult.Message = string.Join(Environment.NewLine, errors.Select(e => e.Description));
+                        var userByName2 = await _userManager.FindByEmailAsync(userDTO.Email);
+                        if (userByName2 != null)
+                            await _userManager.DeleteAsync(userByName2);
+
+                        return registerResult;
+                    }
 
                     registerResult.RegisterStatus = RegisterStatus.Success;
                     registerResult.Message = $"User with{user.UserName} username has enrolled to the system.";
@@ -124,49 +132,6 @@ namespace Services
             }
 
             return registerResult;
-        }
-
-        private async Task<string> CreateTokenAsync(User user)
-        {
-            var signingCredentials = GetSigningCredentials(user);
-            var claims = await GetClaims(user);
-            var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
-            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-        }
-
-        private SigningCredentials GetSigningCredentials(User user)
-        {
-            var jwtSettings = _configuration.GetSection("JwtSettings");
-            var key = Encoding.UTF8.GetBytes(jwtSettings["secretKey"]);
-            var secret = new SymmetricSecurityKey(key);
-            return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
-        }
-
-        private async Task<List<Claim>> GetClaims(User user)
-        {
-            var claims = new List<Claim>
-            {
-                new(ClaimTypes.Name, user.UserName)
-            };
-
-            var roles = await _userManager.GetRolesAsync(user);
-
-            foreach (var role in roles)
-                claims.Add(new Claim(ClaimTypes.Role, role));
-
-            return claims;
-        }
-
-        private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
-        {
-            var jwtSettings = _configuration.GetSection("JwtSettings");
-
-            return new JwtSecurityToken(
-                issuer: jwtSettings["validIssuer"],
-                audience: jwtSettings["validAudience"],
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expirationInMinutes"])),
-                signingCredentials: signingCredentials);
         }
     }
 }

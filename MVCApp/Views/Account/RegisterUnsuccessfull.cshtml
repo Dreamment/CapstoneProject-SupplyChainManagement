@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Successfull Register Page";
+    ViewData["Title"] = "UnSuccessfull Register Page";
 }
 @model (RegisterResult RegisterResult, RegisterUserDTO UserDTO)
 
@@ -30,7 +30,7 @@
 
             // Redirect to home page when the modal is closed
             document.getElementById('UnsuccessfullRegisterModal').addEventListener('hidden.bs.modal', function () {
-                window.location.href = '/Register';
+                window.location.href = '/account/register';
             });
         });
     </script>
