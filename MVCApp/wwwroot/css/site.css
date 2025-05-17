@@ -20,3 +20,14 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Remove spin buttons for number inputs */
+.no-spin::-webkit-inner-spin-button,
+.no-spin::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.no-spin {
+    -moz-appearance: textfield;
+}

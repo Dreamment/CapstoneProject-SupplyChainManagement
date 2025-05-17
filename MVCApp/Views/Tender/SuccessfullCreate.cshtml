@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Successfull Make Bid";
+}
+@model (Tender tender, CreateBidDTO createBidDTO)
+
+<div class="modal fade" id="SuccessfullCreateModal" tabindex="-1" aria-labelledby="SuccessfullCreateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="SuccessfullCreateModalLabel">Bidded</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bid was successfully created, close this pop-up.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Automatically show the modal when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            var modal = new bootstrap.Modal(document.getElementById('SuccessfullCreateModal'));
+            modal.show();
+            // Redirect to home page when the modal is closed
+            document.getElementById('SuccessfullCreateModal').addEventListener('hidden.bs.modal', function () {
+                window.location.href = '/tender';
+            });
+        });
+    </script>
+}
+
+
+<div class="text-center">
+    <div class="display-6">Make a bid</div>
+</div>
+<div class="mb-4">
+    <h2>@Model.tender.Title</h2>
+    <p>@Model.tender.Description</p>
+</div>
+
+<form>
+    <input type="hidden" name="TenderId" value="@Model.createBidDTO.TenderId" />
+    <div class="form-group my-3">
+        <label for="amount">Amount</label>
+        <input id="amount" name="Amount" class="form-control no-spin w-25" type="number" step="any" required value="@Model.createBidDTO.Amount" />
+    </div>
+    <div class="form-group my-3">
+        <button class="btn btn-primary" type="submit">
+            <i class="fa-solid fa-paper-plane"></i> Submit Bid
+        </button>
+    </div>
+</form>

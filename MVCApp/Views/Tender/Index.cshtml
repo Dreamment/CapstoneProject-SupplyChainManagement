@@ -1,38 +1,63 @@
-﻿@{
-    ViewData["Title"] = "Tenders";
-}
-@model IEnumerable<Tender>
+﻿@{  
+    ViewData["Title"] = "Tenders";  
+}  
+@model (IEnumerable<Tender> tenders, List<bool> isBidded)
 
-<div class="row">
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Created</th>
+<div class="row">  
+    <table class="table table-striped table-hover">  
+        <thead>  
+            <tr>  
+                <th>Title</th>  
+                <th>Description</th>  
+                <th>Created</th>  
                 <th>Deadline</th>
+                <th>Bid Status</th>
                 <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
+                <th>Actions</th>  
+            </tr>  
+        </thead>  
         <tbody>
-            @foreach (var tender in Model)
-            {
-                <tr>
-                    <td>@tender.TenderID</td>
-                    <td>@tender.Title</td>
-                    <td>@tender.Description</td>
-                    <td>@tender.CreatedAt.ToString("yyyy-MM-dd")</td>
-                    <td>@tender.Deadline.ToString("yyyy-MM-dd")</td>
-                    <td>@tender.Status</td>
-                    <td>
-                        <a href="#">
-                            <i class="fa-solid fa-person-digging"></i>
-                        </a>
-                    </td>
-                </tr>
+            @{
+                int index = 0;
             }
-        </tbody>
-    </table>
+            @foreach (var tender in Model.tenders)  
+            {  
+                <tr>  
+                    <td>@tender.Title</td>  
+                    <td>@tender.Description</td>  
+                    <td>@tender.CreatedAt.ToString("yyyy-MM-dd")</td>  
+                    <td>@tender.Deadline.ToString("yyyy-MM-dd")</td>
+                    @if (Model.isBidded[index])
+                    {
+                        <td>Bidded</td>
+                    }
+                    else if (tender.Status == Status.Closed)
+                    {
+                        <td>Closed</td>
+                    }
+                    else if (tender.Status == Status.Cancelled)
+                    {
+                        <td>Cancelled</td>
+                    }
+                    else
+                    {
+                        <td>Not Bidded</td>
+                    }
+                    <td>@tender.Status</td>  
+                    <td>
+                        @{
+                            bool hasBid = Model.isBidded[index];
+                        }
+                        @if (!hasBid && tender.Status == Status.Open && tender.Deadline > DateTime.Now)
+                        {  
+                            <a asp-controller="Tender" asp-action="Create" asp-route-tenderId="@tender.TenderID">  
+                                <i class="fa-solid fa-paper-plane"></i> Make Bid  
+                            </a>  
+                        }  
+                    </td>  
+                </tr>
+                index++;
+            }  
+        </tbody>  
+    </table>  
 </div>

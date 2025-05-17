@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Make Bid";
+}
+@model Tender
+
+<div class="text-center">
+    <div class="display-6">Make a bid</div>
+</div>
+<div class="mb-4">
+    <h2>@Model.Title</h2>
+    <p>@Model.Description</p>
+</div>
+
+<form method="post" asp-controller="Tender" asp-action="Create">
+    <input type="hidden" name="TenderId" value="@Model.TenderID" />
+    <div class="form-group my-3">
+        <label for="amount">Amount</label>
+        <input id="amount" name="Amount" class="form-control no-spin w-25" type="number" step="any" required />
+    </div>
+    <div class="form-group my-3">
+        <button class="btn btn-primary" type="submit">
+            <i class="fa-solid fa-paper-plane"></i> Submit Bid
+        </button>
+    </div>
+</form>
