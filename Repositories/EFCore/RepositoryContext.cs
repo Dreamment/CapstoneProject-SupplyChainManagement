@@ -26,6 +26,7 @@ namespace Repositories.EFCore
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Tender> Tenders { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<TenderSupplier> TenderSuppliers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

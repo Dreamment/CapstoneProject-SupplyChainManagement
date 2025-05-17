@@ -28,6 +28,7 @@ namespace Entities.Models
         public Status Status { get; set; }
 
         public List<Bid> Bids { get; set; }
-    }
 
+        public List<TenderSupplier> TenderSuppliers { get; set; }
+    }
 }

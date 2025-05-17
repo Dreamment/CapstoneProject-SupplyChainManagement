@@ -29,6 +29,8 @@ namespace Entities.Models
         public Tender Tender { get; set; }
 
         public Supplier Supplier { get; set; }
+
+        public TenderSupplier TenderSupplier { get; set; }
     }
 
 }

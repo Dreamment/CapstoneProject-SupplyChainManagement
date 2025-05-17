@@ -36,6 +36,7 @@ namespace Entities.Models
         public string User_Name { get; set; }
 
         public List<Bid> Bids { get; set; }
-    }
 
+        public List<TenderSupplier> TenderSuppliers { get; set; }
+    }
 }

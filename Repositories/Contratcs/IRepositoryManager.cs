@@ -17,6 +17,7 @@ namespace Repositories.Contratcs
         IRepositoryBase<Supplier> Supplier { get; }
         IRepositoryBase<Tender> Tender { get; }
         IRepositoryBase<User> User { get; }
+        IRepositoryBase<TenderSupplier> TenderSupplier { get; }
         Task SaveAsync();
     }
 }
