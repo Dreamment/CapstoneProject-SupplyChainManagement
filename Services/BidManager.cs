@@ -26,7 +26,7 @@ namespace Services
             await _repositoryManager.SaveAsync();
 
             var createdBid = await _repositoryManager.Bid.FindByConditionAsync(
-                b => b.TenderID == createBidDTO.TenderId && b.Supplier_Name == createBidDTO.SupplierName, 
+                b => b.TenderId == createBidDTO.TenderId && b.SupplierName == createBidDTO.SupplierName, 
                 trackChanges);
 
             if (createdBid is null)
@@ -36,7 +36,7 @@ namespace Services
                 ts => ts.TenderId == createBidDTO.TenderId && ts.SupplierName == createBidDTO.SupplierName, 
                 trackChanges);
 
-            tenderSupplier.BidId = createdBid.BidID;
+            tenderSupplier.BidId = createdBid.BidId;
             await _repositoryManager.TenderSupplier.UpdateAsync(tenderSupplier);
             await _repositoryManager.SaveAsync();
 

@@ -3,37 +3,28 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models
 {
-    [Table("Suppliers")]
     public class Supplier
     {
-        [Key]
-        [MaxLength(240)]
-        public string Supplier_Name { get; set; }
+        public string SupplierName { get; set; }
 
-        [MaxLength(240)]
         public string Address { get; set; }
 
-        [MaxLength(40)]
         public string Country { get; set; }
 
-        [MaxLength(150)]
-        public string Contact_Person { get; set; }
+        public string ContactPerson { get; set; }
 
-        [MaxLength(40)]
         public string Telephone { get; set; }
 
+        [RegularExpression(@"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$", ErrorMessage = "Invalid email format.")]
+        public string Email { get; set; }
 
-        [MaxLength(240)]
-        public string E_Mail { get; set; }
-
-
-        [MaxLength(40)]
-        public string Tax_ID { get; set; }
+        public string TaxId { get; set; }
 
         public bool IsActive { get; set; }
 
-        [MaxLength(150)]
-        public string User_Name { get; set; }
+        public string Username { get; set; }
+
+        public User User { get; set; }
 
         public List<Bid> Bids { get; set; }
 

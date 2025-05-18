@@ -8,26 +8,26 @@ namespace Entities.Models
     {
         [Key]
         [MaxLength(80)]
-        public string Purchase_Order_ID { get; set; }
+        public string PurchaseOrderId { get; set; }
 
         [MaxLength(150)]
-        public string User_Name { get; set; }
+        public string Username { get; set; }
 
         [MaxLength(240)]
-        public string Supplier_Name { get; set; }
+        public string SupplierName { get; set; }
 
         [MaxLength(80)]
-        public string Purchase_Order_Status { get; set; }
+        public string PurchaseOrderStatus { get; set; }
 
-        public DateTime Last_Update { get; set; }
+        public DateTime LastUpdate { get; set; }
 
-        public DateTime Order_Date { get; set; }
+        public DateTime OrderDate { get; set; }
 
-        public DateTime Expected_Delivery_Date { get; set; }
+        public DateTime ExpectedDeliveryDate { get; set; }
 
-        public int Total_Quantity { get; set; }
+        public int TotalQuantity { get; set; }
 
-        public int Invoice_Total { get; set; }
+        public int InvoiceTotal { get; set; }
 
         public string Notes { get; set; }
     }

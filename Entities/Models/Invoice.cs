@@ -3,33 +3,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models
 {
-    [Table("Invoice")]
     public class Invoice
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Invoice_ID { get; set; }
+        public int InvoiceId { get; set; }
 
-        [MaxLength(80)]
-        public string Invoice_Number { get; set; }
+        public string InvoiceNumber { get; set; }
 
-        [MaxLength(80)]
-        public string Purchase_Order_ID { get; set; }
+        public string PurchaseOrderId { get; set; }
 
-        [MaxLength(150)]
-        public string Warehouse_Name { get; set; }
+        public string WarehouseName { get; set; }
 
-        [MaxLength(40)]
-        public string Gate_Name { get; set; }
+        public string GateName { get; set; }
 
-        [MaxLength(80)]
-        public string Invoice_Status { get; set; }
+        public string InvoiceStatus { get; set; }
 
-        public int Invoice_Total { get; set; }
+        public int InvoiceTotal { get; set; }
 
-        public DateTime Invoice_Date { get; set; }
+        public DateTime InvoiceDate { get; set; }
 
-        public DateTime Delivery_Date { get; set; }
+        public DateTime DeliveryDate { get; set; }
     }
 
 }

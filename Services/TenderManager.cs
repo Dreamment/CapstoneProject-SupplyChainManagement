@@ -18,12 +18,12 @@ namespace Services
 
         public async Task<Tender> GetTenderById(int id, bool trackChanges)
             => await _repositoryManager.Tender.FindByConditionAsync(
-                t => t.TenderID == id, trackChanges);
+                t => t.TenderId == id, trackChanges);
 
         public async Task<IEnumerable<Tender>> GetUserTenders(User user, bool trackChanges)
         {
             var supplier = await _repositoryManager.Supplier.FindByConditionWithDetailsAsync(
-                s => s.User_Name == user.UserName,
+                s => s.Username == user.UserName,
                 trackChanges,
                 s => s.TenderSuppliers);
 
@@ -35,7 +35,7 @@ namespace Services
             foreach (var tenderSupplier in supplier.TenderSuppliers)
             {
                 var tender = await _repositoryManager.Tender.FindByConditionWithDetailsAsync(
-                    t => t.TenderID == tenderSupplier.TenderId,
+                    t => t.TenderId == tenderSupplier.TenderId,
                     trackChanges,
                     t => t.Bids);
                 if (tender != null)

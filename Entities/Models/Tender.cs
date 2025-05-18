@@ -4,22 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models
 {
-    [Table("Tenders")]
     public class Tender
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int TenderID { get; set; }
+        public int TenderId { get; set; }
 
-        [MaxLength(255)]
-        [Required]
         public string Title { get; set; }
 
-        [Column(TypeName = "TEXT")]
         public string Description { get; set; }
 
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedAt { get; set; }
 
         [Required]

@@ -15,7 +15,7 @@ namespace Services
 
         public async Task<Supplier> GetSupplier(User user, bool trackChanges)
          => await _repositoryManager.Supplier.FindByConditionAsync(
-             s => s.User_Name == user.UserName,
+             s => s.Username == user.UserName,
             trackChanges);
     }
 }

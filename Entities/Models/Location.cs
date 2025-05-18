@@ -8,25 +8,25 @@ namespace Entities.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Location_ID { get; set; }
+        public int LocationId { get; set; }
 
         [MaxLength(40)]
-        public string Location_Address { get; set; }
+        public string LocationAddress { get; set; }
 
         [MaxLength(150)]
-        public string Warehouse_Name { get; set; }
+        public string WarehouseName { get; set; }
 
         [MaxLength(80)]
-        public string Location_Type { get; set; }
+        public string LocationType { get; set; }
 
         public float Capacity { get; set; }
 
-        public float Used_Capacity { get; set; }
+        public float UsedCapacity { get; set; }
 
         [MaxLength(80)]
-        public string Location_Status { get; set; }
+        public string LocationStatus { get; set; }
 
-        public int Block_Explanation_ID { get; set; }
+        public int BlockExplanationId { get; set; }
 
         public string Explanation { get; set; }
     }

@@ -1,38 +1,34 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models
 {
-    [Table("Roles")]
-    public class Role
+    public class Role : IdentityRole<Guid>
     {
-        [Key]
-        [MaxLength(240)]
-        public string Role_Name { get; set; }
-
         public bool Buyer { get; set; }
 
         public bool Analitics { get; set; }
 
-        public bool PreAcceptance_PC { get; set; }
+        public bool PreAcceptancePC { get; set; }
 
-        public bool PreAcceptance_Hand { get; set; }
+        public bool PreAcceptanceHand { get; set; }
 
-        public bool Acceptance_PC { get; set; }
+        public bool AcceptancePC { get; set; }
 
-        public bool Acceptance_Hand { get; set; }
+        public bool AcceptanceHand { get; set; }
 
-        public bool Shipment_Bag_PC { get; set; }
+        public bool ShipmentBagPC { get; set; }
 
-        public bool Shipment_Bag_Hand { get; set; }
+        public bool ShipmentBagHand { get; set; }
 
-        public bool Picking_PC { get; set; }
+        public bool PickingPC { get; set; }
 
-        public bool Picking_Hand { get; set; }
+        public bool PickingHand { get; set; }
 
-        public bool Carriage_PC { get; set; }
+        public bool CarriagePC { get; set; }
 
-        public bool Carriage_Hand { get; set; }
+        public bool CarriageHand { get; set; }
 
         public bool Reports { get; set; }
 

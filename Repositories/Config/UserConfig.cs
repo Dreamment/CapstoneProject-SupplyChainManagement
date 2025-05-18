@@ -47,7 +47,7 @@ namespace Repositories.Config
                 .HasColumnName("TelephoneConfirmed")
                 .HasColumnType("nvarchar(40)");
 
-            builder.Property(u => u.SecurityStamp)
+            builder.Property(u => u.ConcurrencyStamp)
                 .HasDefaultValueSql("NEWID()")
                 .ValueGeneratedOnAddOrUpdate();
 
@@ -62,7 +62,7 @@ namespace Repositories.Config
                     NormalizedEmail = "ADMIN@ADMIN.COM",
                     PhoneNumber = "123456789",
                     Role_Name = "Admin",
-                    Status = true,
+                    Status = true
                 });
         }
     }

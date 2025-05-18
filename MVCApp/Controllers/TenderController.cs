@@ -41,7 +41,7 @@ namespace MVCApp.Controllers
                 var bidIndex = 0;
                 foreach (var bid in tender.Bids)
                 {
-                    if (bid.Supplier_Name == supplier.Supplier_Name)
+                    if (bid.SupplierName == supplier.SupplierName)
                     {
                         isBidded[index] = true;
                         break;
@@ -72,7 +72,7 @@ namespace MVCApp.Controllers
         {
             var user = await _signInManager.UserManager.GetUserAsync(User);
             var supplier = await _supplierService.GetSupplier(user, false);
-            createBidDTO.SupplierName = supplier.Supplier_Name;
+            createBidDTO.SupplierName = supplier.SupplierName;
             var result = await _bidService.CreateBidAsync(createBidDTO, false);
             if (result)
             {

@@ -12,6 +12,7 @@ namespace Entities.Models
         public float Salary { get; set; }
 
         public bool Status { get; set; }
-    }
 
+        public Supplier Supplier { get; set; }
+    }
 }

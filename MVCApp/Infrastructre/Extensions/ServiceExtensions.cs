@@ -26,7 +26,7 @@ namespace MVCApp.Infrastructre.Extensions
 
         public static void ConfigureIdentity(this IServiceCollection services)
         {
-            services.AddIdentity<User, IdentityRole<Guid>>( options =>
+            services.AddIdentity<User, Role>( options =>
                 { 
                     options.User.RequireUniqueEmail = true;
                     options.Password.RequireDigit = false;

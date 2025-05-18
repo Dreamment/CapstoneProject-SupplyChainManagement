@@ -22,11 +22,17 @@ namespace Repositories.Config
                 .WithOne(b => b.TenderSupplier)
                 .HasForeignKey<TenderSupplier>(ts => ts.BidId);
 
+            builder.Property(ts => ts.TenderId)
+                .HasColumnName("TenderID")
+                .HasColumnType("int");
+
             builder.Property(ts => ts.SupplierName)
                 .HasColumnName("Supplier_Name")
                 .HasColumnType("nvarchar(240)");
 
             builder.Property(ts => ts.BidId)
+                .HasColumnName("BidID")
+                .HasColumnType("int")
                 .IsRequired(false);
         }
     }

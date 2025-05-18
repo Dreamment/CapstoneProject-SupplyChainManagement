@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Repositories.EFCore
 {
-    public class RepositoryContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
+    public class RepositoryContext : IdentityDbContext<User, Role, Guid>
     {
         public RepositoryContext(DbContextOptions options) : base(options)
         {
@@ -31,19 +31,31 @@ namespace Repositories.EFCore
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             var roleIds = new List<Guid>
             {
                 Guid.Parse("9eb3717a-d2be-4234-856e-fde874c302f3"),
-                Guid.Parse("a4d69dbb-1ff6-4d01-8cca-24b210bb0ed4")
+                Guid.Parse("a4d69dbb-1ff6-4d01-8cca-24b210bb0ed4"),
+                Guid.Parse("2cfca43a-c260-44db-950f-ef75d58f4259")
             };
 
             var userId = Guid.Parse("c7780a04-a2ec-43e3-b25c-d26ea34e1340");
 
-            builder.ApplyConfiguration(new RoleConfiguration(roleIds));
+            builder.ApplyConfiguration(new RoleConfig(roleIds));
             builder.ApplyConfiguration(new UserConfig(userId));
             builder.ApplyConfiguration(new UserRolesConfig(userId, roleIds));
+            builder.ApplyConfiguration(new AcceptanceConfig());
+            builder.ApplyConfiguration(new ActiveAccepnaceControlConfig());
+            builder.ApplyConfiguration(new ActiveInvoiceListConfig());
+            builder.ApplyConfiguration(new ActivePurchaseOderListConfig());
+            builder.ApplyConfiguration(new BidConfig());
+            builder.ApplyConfiguration(new InvoiceConfig());
+            builder.ApplyConfiguration(new LocationConfig());
+            builder.ApplyConfiguration(new PurchaseOrderConfig());
+            builder.ApplyConfiguration(new RawMaterialDataConfig());
+            builder.ApplyConfiguration(new SupplierConfig());
+            builder.ApplyConfiguration(new TenderConfig());
+            builder.ApplyConfiguration(new TenderSupplierConfig());
         }
     }
 }

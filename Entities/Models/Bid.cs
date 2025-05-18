@@ -3,19 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models
 {
-    [Table("Bids")]
     public class Bid
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int BidID { get; set; }
+        public int BidId { get; set; }
 
-        [Required]
-        public int TenderID { get; set; }
+        public int TenderId { get; set; }
 
         [Required]
         [MaxLength(240)]
-        public string Supplier_Name { get; set; }
+        public string SupplierName { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(15,2)")]
