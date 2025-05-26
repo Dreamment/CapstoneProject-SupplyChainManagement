@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.Enums;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -41,9 +42,10 @@ namespace Repositories.Config
                 .HasDefaultValueSql("GETDATE()")
                 .IsRequired(true);
 
-            builder.Property(b => b.IsAccepted)
-                .HasColumnName("IsAccepted")
-                .HasDefaultValue(false);
+            builder.Property(b => b.Status)
+                .HasColumnName("Status")
+                .HasColumnType("tinyint")
+                .HasDefaultValue(BidStatus.Pending);
         }
     }
 }

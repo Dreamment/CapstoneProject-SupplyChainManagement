@@ -5,7 +5,6 @@ using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
-using System.Threading.Tasks;
 
 namespace MVCApp.Controllers
 {
@@ -21,9 +20,9 @@ namespace MVCApp.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Login()
+        public IActionResult Login([FromQuery] string ReturnURL)
         {
-            return View();
+            return View((object)ReturnURL);
         }
 
         [HttpPost]
@@ -89,6 +88,11 @@ namespace MVCApp.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult AccessDenied(string returnUrl = null)
+        {
+            return View((object)returnUrl);
         }
     }
 }

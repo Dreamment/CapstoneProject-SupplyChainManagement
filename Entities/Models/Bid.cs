@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Entities.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models
@@ -20,7 +21,7 @@ namespace Entities.Models
         [Required]
         public DateTime SubmittedAt { get; set; }
 
-        public bool IsAccepted { get; set; }
+        public BidStatus Status { get; set; }
 
         public Tender Tender { get; set; }
 

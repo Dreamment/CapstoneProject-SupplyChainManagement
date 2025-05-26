@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Tender Details";
+}
+@model (Tender tender, bool isBidded)
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-body">
+            <h3 class="card-title mb-3">
+                <i class="fa fa-file-contract text-primary me-2"></i>
+                @Model.tender.Title
+            </h3>
+            <div class="mb-4">
+                <h5>
+                    <i class="fa fa-scroll text-secondary me-2"></i>
+                    Contract Description
+                </h5>
+                <div class="border rounded p-3 bg-light">
+                    @Model.tender.Description
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <span class="fw-semibold">
+                        <i class="fa fa-hourglass-end text-warning me-1"></i>
+                        Deadline:
+                    </span>
+                    <span class="badge 
+                        @(Model.tender.Deadline < DateTime.Now ?
+                            "bg-danger text-light" : 
+                            "bg-warning text-dark")">
+                        @Model.tender.Deadline.ToString("yyyy-MM-dd HH:mm")
+                    </span>
+                </div>
+                <div class="col-md-6">
+                    <span class="fw-semibold">
+                        <i class="fa fa-info-circle text-info me-1"></i>
+                        Status:
+                    </span>
+                    <span class="badge
+                        @(  Model.tender.Status == Status.Open      ? "bg-success" :
+                            Model.tender.Status == Status.Closed    ? "bg-secondary" :
+                                                                      "bg-danger")">
+                        @Model.tender.Status
+                    </span>
+                </div>
+            </div>
+            <form asp-action="Bid" method="get" class="mt-3" id="bidForm">
+                <input type="hidden" name="tenderId" value="@Model.tender.TenderId" />
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="acceptContract" required>
+                    <label class="form-check-label" for="acceptContract">
+                        I have read and accept the contract terms
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary" id="makeBidBtn" disabled>
+                    <i class="fa fa-gavel me-1"></i>
+                    @(Model.isBidded ? "Change Bid" : "Make a Bid")
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('acceptContract').addEventListener('change', function () {
+            document.getElementById('makeBidBtn').disabled = !this.checked;
+        });
+    </script>
+}

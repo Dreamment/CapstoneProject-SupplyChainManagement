@@ -27,6 +27,7 @@ namespace Repositories.EFCore
         public DbSet<Tender> Tenders { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<TenderSupplier> TenderSuppliers { get; set; }
+        public DbSet<OldBid> OldBids { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -36,7 +37,8 @@ namespace Repositories.EFCore
             {
                 Guid.Parse("9eb3717a-d2be-4234-856e-fde874c302f3"),
                 Guid.Parse("a4d69dbb-1ff6-4d01-8cca-24b210bb0ed4"),
-                Guid.Parse("2cfca43a-c260-44db-950f-ef75d58f4259")
+                Guid.Parse("2cfca43a-c260-44db-950f-ef75d58f4259"),
+                Guid.Parse("cc0b8568-8ac2-4a8b-b341-fc517a7d75ff")
             };
 
             var userId = Guid.Parse("c7780a04-a2ec-43e3-b25c-d26ea34e1340");
@@ -56,6 +58,7 @@ namespace Repositories.EFCore
             builder.ApplyConfiguration(new SupplierConfig());
             builder.ApplyConfiguration(new TenderConfig());
             builder.ApplyConfiguration(new TenderSupplierConfig());
+            builder.ApplyConfiguration(new OldBidConfig());
         }
     }
 }

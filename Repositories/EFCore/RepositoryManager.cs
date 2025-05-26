@@ -25,6 +25,7 @@ namespace Repositories.EFCore
             Tender = new RepositoryBase<Tender>(_context);
             User = new RepositoryBase<User>(_context);
             TenderSupplier = new RepositoryBase<TenderSupplier>(_context);
+            OldBid = new RepositoryBase<OldBid>(_context);
         }
         public IRepositoryBase<Acceptance> Acceptance { get; }
         public IRepositoryBase<ActiveAcceptanceControl> ActiveAcceptanceControl { get; }
@@ -40,6 +41,7 @@ namespace Repositories.EFCore
         public IRepositoryBase<Tender> Tender { get; }
         public IRepositoryBase<User> User { get; }
         public IRepositoryBase<TenderSupplier> TenderSupplier { get; }
+        public IRepositoryBase<OldBid> OldBid { get; }
         public async Task SaveAsync() 
             => await _context.SaveChangesAsync();
     }

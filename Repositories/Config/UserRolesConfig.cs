@@ -34,6 +34,11 @@ namespace Repositories.Config
                 {
                     UserId = _userId,
                     RoleId = _roleIds[2] // Supplier role
+                },
+                new IdentityUserRole<Guid>
+                {
+                    UserId = _userId,
+                    RoleId = _roleIds[3] // User role
                 }
             );
         }

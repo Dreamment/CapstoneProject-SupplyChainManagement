@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repositories.EFCore;
 
@@ -11,9 +12,11 @@ using Repositories.EFCore;
 namespace MVCApp.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20250526060434_AddOldBidEntity")]
+    partial class AddOldBidEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,11 +182,11 @@ namespace MVCApp.Migrations
                         .HasColumnType("decimal(15,2)")
                         .HasColumnName("Amount");
 
-                    b.Property<byte>("Status")
+                    b.Property<bool>("IsAccepted")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)0)
-                        .HasColumnName("Status");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsAccepted");
 
                     b.Property<DateTime>("SubmittedAt")
                         .ValueGeneratedOnAdd()
@@ -328,12 +331,6 @@ namespace MVCApp.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(15,2)")
                         .HasColumnName("Amount");
-
-                    b.Property<byte>("OldStatus")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)0)
-                        .HasColumnName("OldStatus");
 
                     b.Property<string>("SupplierName")
                         .IsRequired()
@@ -826,7 +823,7 @@ namespace MVCApp.Migrations
                         {
                             Id = new Guid("c7780a04-a2ec-43e3-b25c-d26ea34e1340"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "59aebbc3-b872-414c-b9ff-bca49ed201cb",
+                            ConcurrencyStamp = "ff5cb74d-93e9-4968-bdab-74580f914c59",
                             Email = "admin@admin.com",
                             EmailConfirmed = "0",
                             LockoutEnabled = false,

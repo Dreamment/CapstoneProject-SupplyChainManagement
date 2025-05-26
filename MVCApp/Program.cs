@@ -9,6 +9,7 @@ builder.Services.ConfigureSession();
 builder.Services.ConfigureCustomServices();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureRouting();
+builder.Services.ConfigureApplicationCookie();
 
 builder.Services.AddAutoMapper(typeof(Program));
 

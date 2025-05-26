@@ -56,5 +56,14 @@ namespace MVCApp.Infrastructre.Extensions
                 options.LowercaseUrls = true;
             });
         }
+
+        public static void ConfigureApplicationCookie(this IServiceCollection services)
+        {
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromHours(1);
+            });
+        }
     }
 }

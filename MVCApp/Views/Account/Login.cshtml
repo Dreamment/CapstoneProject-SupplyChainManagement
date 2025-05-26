@@ -1,6 +1,15 @@
 ﻿@{
     ViewData["Title"] = "Login Page";
 }
+@model string
+
+@if (Model == "/tender")
+{
+    <h1 class="h5 mb-3">
+        You need to login to see tenders.
+    </h1>
+}
+
 <div class="form-signin w-100 m-auto">
     <form method="post" asp-controller="Account" asp-action="Login">
         <h1 class="h3 mb-3 fw-normal">Sign In</h1>

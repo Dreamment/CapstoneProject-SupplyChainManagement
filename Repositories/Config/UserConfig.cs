@@ -62,7 +62,8 @@ namespace Repositories.Config
                     NormalizedEmail = "ADMIN@ADMIN.COM",
                     PhoneNumber = "123456789",
                     Role_Name = "Admin",
-                    Status = true
+                    Status = true,
+                    SecurityStamp = "79e9e60f-e9ac-46a7-8a2c-e055070ec83a"
                 });
         }
     }

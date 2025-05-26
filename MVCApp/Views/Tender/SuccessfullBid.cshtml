@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Bid Submitted Successfully";
+}
+@model (Tender tender, CreateBidDTO bid)
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-success text-white text-center">
+                    <h2 class="mb-0">
+                        <i class="fa-solid fa-circle-check me-2"></i>
+                        Bid Submitted!
+                    </h2>
+                </div>
+                <div class="card-body text-center">
+                    <h4 class="card-title mb-3">
+                        <i class="fa-solid fa-file-contract text-secondary me-2"></i>
+                        @Model.tender.Title
+                    </h4>
+                    <p class="lead mb-4">
+                        <i class="fa-solid fa-coins text-warning me-1"></i>
+                        Your bid of <span class="fw-bold">@Model.bid.Amount</span> has been submitted successfully.
+                    </p>
+                    <div class="alert alert-success d-flex align-items-center justify-content-center" role="alert">
+                        <i class="fa-solid fa-thumbs-up me-2"></i>
+                        Thank you for your participation!
+                    </div>
+                </div>
+                <div class="card-footer text-center bg-light">
+                    <a asp-action="Details" asp-route-tenderId="@Model.tender.TenderId" class="btn btn-outline-primary me-2">
+                        <i class="fa-solid fa-info-circle"></i> View Tender Details
+                    </a>
+                    <a asp-action="Index" class="btn btn-link">
+                        <i class="fa-solid fa-list"></i> Back to Tenders
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

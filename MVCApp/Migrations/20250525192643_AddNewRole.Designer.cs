@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repositories.EFCore;
 
@@ -11,9 +12,11 @@ using Repositories.EFCore;
 namespace MVCApp.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20250525192643_AddNewRole")]
+    partial class AddNewRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,11 +182,11 @@ namespace MVCApp.Migrations
                         .HasColumnType("decimal(15,2)")
                         .HasColumnName("Amount");
 
-                    b.Property<byte>("Status")
+                    b.Property<bool>("IsAccepted")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)0)
-                        .HasColumnName("Status");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsAccepted");
 
                     b.Property<DateTime>("SubmittedAt")
                         .ValueGeneratedOnAdd()
@@ -314,39 +317,6 @@ namespace MVCApp.Migrations
                     b.HasKey("LocationId");
 
                     b.ToTable("Locations", (string)null);
-                });
-
-            modelBuilder.Entity("Entities.Models.OldBid", b =>
-                {
-                    b.Property<int>("OldBidId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("OldBidID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OldBidId"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(15,2)")
-                        .HasColumnName("Amount");
-
-                    b.Property<byte>("OldStatus")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)0)
-                        .HasColumnName("OldStatus");
-
-                    b.Property<string>("SupplierName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(240)")
-                        .HasColumnName("Supplier_Name");
-
-                    b.Property<int>("TenderId")
-                        .HasColumnType("int")
-                        .HasColumnName("TenderID");
-
-                    b.HasKey("OldBidId");
-
-                    b.ToTable("OldBids", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.PurchaseOrder", b =>
@@ -826,7 +796,7 @@ namespace MVCApp.Migrations
                         {
                             Id = new Guid("c7780a04-a2ec-43e3-b25c-d26ea34e1340"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "59aebbc3-b872-414c-b9ff-bca49ed201cb",
+                            ConcurrencyStamp = "13afffcd-ac73-4589-a8e3-e2b51eaa3da1",
                             Email = "admin@admin.com",
                             EmailConfirmed = "0",
                             LockoutEnabled = false,
