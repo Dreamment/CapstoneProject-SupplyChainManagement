@@ -4,7 +4,9 @@ using Entities.Enums;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MVCApp.Models;
 using Services.Contracts;
+using System.Text.Json;
 
 namespace MVCApp.Controllers
 {
@@ -20,37 +22,52 @@ namespace MVCApp.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Login([FromQuery] string ReturnURL)
+        [HttpGet]
+        public IActionResult Login([FromQuery] string ReturnURL = "/")
         {
-            return View((object)ReturnURL);
+            bool isloggedIn = User.Identity.IsAuthenticated;
+            if (isloggedIn)
+                // redirect to the return URL if the user is already logged in
+                return Redirect(ReturnURL);
+            return View((ReturnURL, new LoginUserDTO()));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login([FromForm] LoginUserDTO userDTO)
+        public async Task<IActionResult> Login([FromForm] LoginUserDTO userDTO, [FromQuery]string returnUrl)
         {
             await _signInManager.SignOutAsync();
-            LoginResult loginResult = new();
             if (ModelState.IsValid)
             {
-                loginResult = await _authenticationService.LoginAsync(userDTO, false);
+                var loginResult = await _authenticationService.LoginAsync(userDTO, false);
+                if (loginResult.LoginStatus == LoginStatus.Success)
+                {
+                    var signInManagerResult = await _signInManager.PasswordSignInAsync(userDTO.UserName, userDTO.Password, false, false);
+                    if (signInManagerResult.Succeeded == false)
+                    {
+                        ModelState.AddModelError("", "Something went wrong during login. Please try again./n" +
+                            "If the problem persists, contact support.");
+                        return View((returnUrl, userDTO));
+                    }
+                    TempData["UserDTO"] = JsonSerializer.Serialize(userDTO);
+                    return RedirectToAction("LoginSuccessfull", new { returnUrl });
+                }
+                else
+                {
+                    ModelState.AddModelError("", loginResult.Message);
+                    return View((returnUrl, userDTO));
+                }
             }
             else
             {
-                ModelState.AddModelError("", "Invalid data.");
-                return View("LoginUnsuccessfull", (loginResult,userDTO));
+                ModelState.AddModelError("", "Please check the highlighted fields and try again.");
+                return View((returnUrl, userDTO));
             }
+        }
 
-            if (loginResult.LoginStatus == LoginStatus.Success)
-            {
-                var signInManagerResult = await _signInManager.PasswordSignInAsync(userDTO.UserName, userDTO.Password, false, false);
-                return View("LoginSuccessfull", userDTO);
-            }
-            else
-            {
-                ModelState.AddModelError("", loginResult.Message);
-                return View("LoginUnsuccessfull", (loginResult, userDTO));
-            }
+        public IActionResult LoginSuccessfull([FromQuery] string returnUrl)
+        {
+            return View((object)returnUrl);
         }
 
         public IActionResult Register()
@@ -62,25 +79,24 @@ namespace MVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([FromForm] RegisterUserDTO userDTO)
         {
-            RegisterResult result = new();
             if (ModelState.IsValid)
             {
-                result = await _authenticationService.RegisterAsync(userDTO, false);
-            }
-            else
-            {
-                ModelState.AddModelError("", "Invalid data.");
-                return View("RegisterUnsuccessfull", (result,userDTO));
-            }
+                var result = await _authenticationService.RegisterAsync(userDTO, false);
 
-            if (result.RegisterStatus == RegisterStatus.Success)
-            {
-                return View("RegisterSuccessfull", userDTO);
+                if (result.RegisterStatus == RegisterStatus.Success)
+                {
+                    return View("RegisterSuccessfull", userDTO);
+                }
+                else
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View(userDTO);
+                }
             }
             else
             {
-                ModelState.AddModelError("", result.Message);
-                return View("RegisterUnsuccessfull", (result, userDTO));
+                ModelState.AddModelError("", "Please check the highlighted fields and try again.");
+                return View(userDTO);
             }
         }
         

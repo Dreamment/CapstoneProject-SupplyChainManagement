@@ -1,28 +1,58 @@
 ﻿@{
     ViewData["Title"] = "Login Page";
 }
-@model string
+@model (string returnUrl, LoginUserDTO userDTO)
 
-@if (Model == "/tender")
-{
-    <h1 class="h5 mb-3">
-        You need to login to see tenders.
-    </h1>
-}
-
-<div class="form-signin w-100 m-auto">
-    <form method="post" asp-controller="Account" asp-action="Login">
-        <h1 class="h3 mb-3 fw-normal">Sign In</h1>
-        <div class="form-floating">
-            <input type="text" class="form-control" id="UserName" name="UserName"
-                   placeholder="username"> <label for="floatingInput">Username</label>
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="mb-0">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i>
+                        Sign In
+                    </h2>
+                </div>
+                <div class="card-body">
+                    @if (Model.returnUrl == "/tender")
+                    {
+                        <div class="alert alert-warning d-flex align-items-center mb-3" role="alert">
+                            <i class="fa-solid fa-lock me-2"></i>
+                            You need to login to see tenders.
+                        </div>
+                    }
+                    <div asp-validation-summary="All" class="text-danger mb-2"></div>
+                    <form method="post" 
+                        asp-controller="Account" 
+                        asp-action="Login" 
+                        asp-route-returnUrl="@(string.IsNullOrEmpty(Model.returnUrl) ? "/" : Model.returnUrl)" 
+                        autocomplete="off">
+                        <div class="mb-3">
+                            <label for="UserName" class="form-label fw-semibold">
+                                <i class="fa-solid fa-user me-1"></i> Username
+                            </label>
+                            <input type="text" class="form-control" id="UserName" name="UserName" placeholder="Enter your username" required autofocus>
+                        </div>
+                        <div class="mb-4">
+                            <label for="Password" class="form-label fw-semibold">
+                                <i class="fa-solid fa-key me-1"></i> Password
+                            </label>
+                            <input type="password" class="form-control" id="Password" name="Password" placeholder="Enter your password" required>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success btn-lg" type="submit">
+                                <i class="fa-solid fa-arrow-right-to-bracket me-1"></i> Sign In
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center bg-light">
+                    <span>Don't have an account?</span>
+                    <a asp-action="Register" class="btn btn-link">
+                        <i class="fa-solid fa-user-plus"></i> Register
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="form-floating">
-            <input type="password" class="form-control" id="Password" name="Password"
-                   placeholder="Password"> <label for="floatingPassword">Password</label>
-        </div>
-        <div>
-            <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
-        </div>
-    </form>
+    </div>
 </div>

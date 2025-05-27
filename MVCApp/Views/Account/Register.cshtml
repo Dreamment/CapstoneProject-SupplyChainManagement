@@ -1,32 +1,136 @@
 ﻿@{
     ViewData["Title"] = "Register Page";
 }
-<div class="form-signin w-100 m-auto">
-    <form method="post" asp-controller="Account" asp-action="Register">
-        <h1 class="h3 mb-3 fw-normal">Sign Up</h1>
-        <div class="form-floating">
-            <input type="text" class="form-control" id="UserName" name="UserName"
-                   placeholder="username"> <label for="floatingInput">Username</label>
+@model RegisterUserDTO
+
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="mb-0">
+                        <i class="fa-solid fa-user-plus me-2"></i>
+                        Sign Up
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <form id="registerForm" method="post" asp-controller="Account" asp-action="Register" autocomplete="off">
+                        <div asp-validation-summary="All" class="text-danger mb-2"></div>
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label fw-semibold">
+                                <i class="fa-solid fa-user me-1"></i> Username
+                            </label>
+                            <input asp-for="UserName" class="form-control" placeholder="Enter your username" required minlength="3" />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label fw-semibold">
+                                <i class="fa-solid fa-key me-1"></i> Password
+                            </label>
+                            <input type="password" asp-for="Password" class="form-control" placeholder="Enter your password" required minlength="6" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="ConfirmPassword" class="form-label fw-semibold">
+                                <i class="fa-solid fa-key me-1"></i> Confirm Password
+                            </label>
+                            <input type="password" asp-for="ConfirmPassword" class="form-control" placeholder="Re-enter your password" required minlength="6" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Telephone" class="form-label fw-semibold">
+                                <i class="fa-solid fa-phone me-1"></i> Telephone
+                            </label>
+                            <input asp-for="Telephone" class="form-control" placeholder="Enter your phone number" required pattern="^(\+?\d{10,15})$" inputmode="tel" />
+                            <span asp-validation-for="Telephone" class="text-danger"></span>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label fw-semibold">
+                                <i class="fa-solid fa-envelope me-1"></i> Email address
+                            </label>
+                            <input asp-for="Email" class="form-control" placeholder="Enter your email" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success btn-lg" type="submit">
+                                <i class="fa-solid fa-user-plus me-1"></i> Sign Up
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center bg-light">
+                    <span>Already have an account?</span>
+                    <a asp-action="Login" class="btn btn-link">
+                        <i class="fa-solid fa-right-to-bracket"></i> Login
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="form-floating">
-            <input type="password" class="form-control" id="Password" name="Password"
-                   placeholder="Password"> <label for="floatingPassword">Password</label>
-        </div>
-        <div class="form-floating">
-            <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword"
-                   placeholder="Password Again"> <label for="floatingPassword">Password Again</label>
-        </div>
-        <div class="form-floating">
-            <input type="tel" class="form-control" id="Telephone" name="Telephone"
-                   placeholder="name@example.com"> <label for="floatingInput">Telephone</label>
-        </div>
-        <div class="form-floating">
-            <input type="email" class="form-control" id="Email" name="Email"
-                   placeholder="name@example.com"> <label for="floatingInput">Email address</label>
-        </div>
-        <div>
-            <button class="btn btn-primary w-100 py-2" type="submit">Sign up</button>
-            <a class=""
-        </div>
-    </form>
+    </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function () {
+            $.validator.addMethod("validPhone", function (value, element) {
+                return this.optional(element) || /^(\+?\d{10,15})$/.test(value);
+            }, "Please enter a valid phone number (only digits, 10-15 characters, can start with '+').");
+
+            $("#registerForm").validate({
+                rules: {
+                    UserName: {
+                        required: true,
+                        minlength: 3
+                    },
+                    Password: {
+                        required: true,
+                        minlength: 6
+                    },
+                    ConfirmPassword: {
+                        required: true,
+                        minlength: 6,
+                        equalTo: "#Password"
+                    },
+                    Telephone: {
+                        validPhone: true
+                    },
+                    Email: {
+                        required: true,
+                        email: true
+                    }
+                },
+                messages: {
+                    UserName: {
+                        required: "Username is required.",
+                        minlength: "Username must be at least 3 characters."
+                    },
+                    Password: {
+                        required: "Password is required.",
+                        minlength: "Password must be at least 6 characters."
+                    },
+                    ConfirmPassword: {
+                        required: "Please confirm your password.",
+                        minlength: "Password must be at least 6 characters.",
+                        equalTo: "Passwords do not match."
+                    },
+                    Telephone: {
+                        pattern: "Please enter a valid phone number (only digits, 10-15 characters, can start with '+')."
+                    },
+                    Email: {
+                        required: "Email is required.",
+                        email: "Please enter a valid email address."
+                    }
+                },
+                errorClass: "text-danger",
+                errorElement: "div",
+                highlight: function (element) {
+                    $(element).addClass("is-invalid");
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass("is-invalid");
+                }
+            });
+        });
+    </script>
+}

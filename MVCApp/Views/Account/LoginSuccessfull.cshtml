@@ -1,53 +1,96 @@
 ﻿@{  
-  ViewData["Title"] = "Successfull Login Page";  
+    ViewData["Title"] = "Successfull Login Page";  
 }  
-@model LoginUserDTO  
+@model string  
+@{  
+    var userDTOStr = TempData["UserDTO"] as string;  
+    LoginUserDTO? userDTO = null; 
+    if (!string.IsNullOrEmpty(userDTOStr))  
+    {  
+        userDTO = JsonSerializer.Deserialize<LoginUserDTO>(userDTOStr);  
+    }  
+}  
 
 <div class="modal fade" id="SuccessfullLoginModal" tabindex="-1" aria-labelledby="SuccesfullModalLabel" aria-hidden="true">  
-  <div class="modal-dialog">  
-      <div class="modal-content">  
-          <div class="modal-header">  
-              <h1 class="modal-title fs-5" id="SuccesfullModalLabel">Login Succesfull</h1>  
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>  
-          </div>  
-          <div class="modal-body">  
-              Login succesfully, close this pop-up.
-          </div>  
-          <div class="modal-footer">  
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>  
-          </div>  
-      </div>  
-  </div>  
+    <div class="modal-dialog modal-dialog-centered">  
+        <div class="modal-content border-0 shadow-lg">  
+            <div class="modal-header bg-success text-white">  
+                <h1 class="modal-title fs-5" id="SuccesfullModalLabel">  
+                    <i class="fa-solid fa-circle-check me-2"></i>  
+                    Login Successful  
+                </h1>  
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>  
+            </div>  
+            <div class="modal-body text-center">  
+                <p class="mb-0">  
+                    You have logged in successfully.<br>  
+                    Please close this pop-up to continue.  
+                </p>  
+            </div>  
+            <div class="modal-footer justify-content-center bg-light">  
+                <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal">  
+                    <i class="fa-solid fa-house me-1"></i> Go to   
+                    @if (Model == "/tender") {<span>Tenders</span>} else { <span>Home</span>}  
+                </button>  
+            </div>  
+        </div>  
+    </div>  
 </div>  
 
-@section Scripts {  
-  <script>  
-      // Automatically show the modal when the page loads  
-      document.addEventListener('DOMContentLoaded', function () {  
-          var modal = new bootstrap.Modal(document.getElementById('SuccessfullLoginModal'));  
-          modal.show();  
+@section Scripts {    
+  <script>    
+      // Automatically show the modal when the page loads    
+      document.addEventListener('DOMContentLoaded', function () {    
+          var modal = new bootstrap.Modal(document.getElementById('SuccessfullLoginModal'));    
+          modal.show();    
 
-          // Redirect to home page when the modal is closed  
-          document.getElementById('SuccessfullLoginModal').addEventListener('hidden.bs.modal', function () {  
-              window.location.href = '/';  
-          });  
-      });  
-  </script>  
-}  
+          // Redirect to home page when the modal is closed    
+          document.getElementById('SuccessfullLoginModal').addEventListener('hidden.bs.modal', function () {    
+              window.location.href = '@Model';  
+          });    
+      });    
+  </script>    
+}    
 
-<div class="form-signin w-100 m-auto">
-    <form>
-        <h1 class="h3 mb-3 fw-normal">Sign In</h1>
-        <div class="form-floating">
-            <input type="text" class="form-control" id="UserName"
-                   placeholder="username"> <label for="floatingInput">Username</label>
-        </div>
-        <div class="form-floating">
-            <input type="password" class="form-control" id="Password"
-                   placeholder="Password"> <label for="floatingPassword">Password</label>
-        </div>
-        <div>
-            <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
-        </div>
-    </form>
+<div class="container">  
+    <div class="row justify-content-center align-items-center" style="min-height: 80vh;">  
+        <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">  
+            <div class="card shadow-lg border-0">  
+                <div class="card-header bg-primary text-white text-center">  
+                    <h2 class="mb-0">  
+                        <i class="fa-solid fa-right-to-bracket me-2"></i>  
+                        Sign In  
+                    </h2>  
+                </div>  
+                <div class="card-body">  
+                    <form autocomplete="off">
+                        <div asp-validation-summary="All" class="text-danger mb-2"></div>
+                        <div class="mb-3">  
+                            <label for="UserName" class="form-label fw-semibold">  
+                                <i class="fa-solid fa-user me-1"></i> Username  
+                            </label>  
+                            <input type="text" class="form-control" id="UserName" name="UserName" placeholder="Enter your username" disabled value="@userDTO?.UserName" /> <!-- Use null-conditional operator -->  
+                        </div>  
+                        <div class="mb-4">  
+                            <label for="Password" class="form-label fw-semibold">  
+                                <i class="fa-solid fa-key me-1"></i> Password  
+                            </label>  
+                            <input type="password" class="form-control" id="Password" name="Password" placeholder="Enter your password" required disabled>  
+                        </div>  
+                        <div class="d-grid gap-2">  
+                            <button class="btn btn-success btn-lg" type="button" disabled>  
+                                <i class="fa-solid fa-arrow-right-to-bracket me-1"></i> Sign In  
+                            </button>  
+                        </div>  
+                    </form>  
+                </div>  
+                <div class="card-footer text-center bg-light">  
+                    <span>Don't have an account?</span>  
+                    <a asp-action="Register" class="btn btn-link">  
+                        <i class="fa-solid fa-user-plus"></i> Register  
+                    </a>  
+                </div>  
+            </div>  
+        </div>  
+    </div>  
 </div>

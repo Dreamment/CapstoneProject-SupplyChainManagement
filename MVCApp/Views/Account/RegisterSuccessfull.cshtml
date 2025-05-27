@@ -1,24 +1,32 @@
 ﻿@{  
-  ViewData["Title"] = "Successfull Register Page";  
+  ViewData["Title"] = "Successfull Register";  
 }  
 @model RegisterUserDTO  
 
-<div class="modal fade" id="SuccessfullRegisterModal" tabindex="-1" aria-labelledby="SuccesfullModalLabel" aria-hidden="true">  
-  <div class="modal-dialog">  
-      <div class="modal-content">  
-          <div class="modal-header">  
-              <h1 class="modal-title fs-5" id="SuccesfullModalLabel">Register Succesfull</h1>  
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>  
-          </div>  
-          <div class="modal-body">  
-              Register succesfully, close this pop-up and login.  
-          </div>  
-          <div class="modal-footer">  
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>  
-          </div>  
-      </div>  
-  </div>  
-</div>  
+<div class="modal fade" id="SuccessfullRegisterModal" tabindex="-1" aria-labelledby="SuccesfullModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-success text-white">
+                <h1 class="modal-title fs-5" id="SuccesfullModalLabel">
+                    <i class="fa-solid fa-circle-check me-2"></i>
+                    Registration Successful
+                </h1>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p class="mb-0">
+                    Your account has been created successfully.<br>
+                    Please close this pop-up and log in.
+                </p>
+            </div>
+            <div class="modal-footer justify-content-center bg-light">
+                <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-right-to-bracket me-1"></i> Go to Login
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {  
   <script>  
@@ -33,34 +41,65 @@
           });  
       });  
   </script>  
-}  
+}
 
-<div class="form-signin w-100 m-auto">  
-  <form>  
-      <h1 class="h3 mb-3 fw-normal">Sign Up</h1>  
-      <div class="form-floating">  
-          <input type="text" class="form-control" id="UserName"  
-                 placeholder="username" value="@Model.UserName"> <label for="floatingInput">Username</label>  
-      </div>  
-      <div class="form-floating">  
-          <input type="password" class="form-control" id="Password"  
-                 placeholder="Password" value="@Model.Password"> <label for="floatingPassword">Password</label>  
-      </div>  
-      <div class="form-floating">  
-          <input type="password" class="form-control" id="ConfirmPassword"  
-                 placeholder="Password Again" value="@Model.ConfirmPassword"> <label for="floatingPassword">Password Again</label>  
-      </div>  
-      <div class="form-floating">  
-          <input type="tel" class="form-control" id="Telephone"  
-                 placeholder="name@example.com" value="@Model.Telephone"> <label for="floatingInput">Telephone</label>  
-      </div>  
-      <div class="form-floating">  
-          <input type="email" class="form-control" id="Email"  
-                 placeholder="name@example.com" value="@Model.Email"> <label for="floatingInput">Email address</label>  
-      </div>  
-      <div>  
-          <button class="btn btn-primary w-100 py-2" type="submit">Sign up</button>  
-          <a class=""  
-      </div>  
-  </form>  
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="mb-0">
+                        <i class="fa-solid fa-user-plus me-2"></i>
+                        Sign Up
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <form id="registerForm" autocomplete="off">
+                        <div asp-validation-summary="All" class="text-danger mb-2"></div>
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label fw-semibold">
+                                <i class="fa-solid fa-user me-1"></i> Username
+                            </label>
+                            <input asp-for="UserName" class="form-control" placeholder="Enter your username" required minlength="3" disabled />
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label fw-semibold">
+                                <i class="fa-solid fa-key me-1"></i> Password
+                            </label>
+                            <input type="password" asp-for="Password" class="form-control" placeholder="Enter your password" required minlength="6" disabled />
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="ConfirmPassword" class="form-label fw-semibold">
+                                <i class="fa-solid fa-key me-1"></i> Confirm Password
+                            </label>
+                            <input type="password" asp-for="ConfirmPassword" class="form-control" placeholder="Re-enter your password" required minlength="6" disabled />
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Telephone" class="form-label fw-semibold">
+                                <i class="fa-solid fa-phone me-1"></i> Telephone
+                            </label>
+                            <input asp-for="Telephone" class="form-control" placeholder="Enter your phone number" required pattern="^(\+?\d{10,15})$" inputmode="tel" disabled />
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label fw-semibold">
+                                <i class="fa-solid fa-envelope me-1"></i> Email address
+                            </label>
+                            <input asp-for="Email" class="form-control" placeholder="Enter your email" required disabled />
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success btn-lg" type="button" disabled>
+                                <i class="fa-solid fa-user-plus me-1"></i> Sign Up
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center bg-light">
+                    <span>Already have an account?</span>
+                    <a asp-action="Login" class="btn btn-link">
+                        <i class="fa-solid fa-right-to-bracket"></i> Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
