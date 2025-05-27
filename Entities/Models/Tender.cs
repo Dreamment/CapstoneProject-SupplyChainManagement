@@ -12,6 +12,8 @@ namespace Entities.Models
 
         public string Description { get; set; }
 
+        public string ContractDetails { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         [Required]

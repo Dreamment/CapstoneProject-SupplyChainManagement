@@ -23,6 +23,9 @@ namespace Repositories.Config
             builder.Property(t => t.Description)
                 .HasColumnType("TEXT");
 
+            builder.Property(t => t.ContractDetails)
+                .HasColumnType("TEXT");
+
             builder.Property(t => t.CreatedAt)
                 .HasColumnName("CreatedAt")
                 .HasColumnType("DATETIME")

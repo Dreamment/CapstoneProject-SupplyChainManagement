@@ -12,11 +12,20 @@
             </h3>
             <div class="mb-4">
                 <h5>
-                    <i class="fa fa-scroll text-secondary me-2"></i>
-                    Contract Description
+                    <i class="fa fa-align-left text-secondary me-2"></i>
+                    Description
                 </h5>
                 <div class="border rounded p-3 bg-light">
                     @Model.tender.Description
+                </div>
+            </div>
+            <div class="mb-4">
+                <h5>
+                    <i class="fa fa-scroll text-secondary me-2"></i>
+                    Contract Details
+                </h5>
+                <div class="border rounded p-3 bg-light">
+                    @Html.Raw(Model.tender.ContractDetails?.Replace("\r\n", "<br/>").Replace("\n", "<br/>").Replace("\\n", "<br/>"))
                 </div>
             </div>
             <div class="row mb-4">
@@ -25,10 +34,10 @@
                         <i class="fa fa-hourglass-end text-warning me-1"></i>
                         Deadline:
                     </span>
-                    <span class="badge 
+                    <span class="badge
                         @(Model.tender.Deadline < DateTime.Now ?
-                            "bg-danger text-light" : 
-                            "bg-warning text-dark")">
+                                                      "bg-danger text-light" :
+                                                      "bg-warning text-dark")">
                         @Model.tender.Deadline.ToString("yyyy-MM-dd HH:mm")
                     </span>
                 </div>
