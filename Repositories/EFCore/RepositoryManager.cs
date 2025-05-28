@@ -1,5 +1,5 @@
 ﻿using Entities.Models;
-using Repositories.Contratcs;
+using Repositories.Contracts;
 
 namespace Repositories.EFCore
 {

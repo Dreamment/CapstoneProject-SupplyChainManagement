@@ -1,6 +1,6 @@
 ﻿using Entities.Models;
 
-namespace Repositories.Contratcs
+namespace Repositories.Contracts
 {
     public interface IRepositoryManager
     {

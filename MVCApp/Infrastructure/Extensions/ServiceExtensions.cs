@@ -1,12 +1,12 @@
 ﻿using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Repositories.Contratcs;
+using Repositories.Contracts;
 using Repositories.EFCore;
 using Services;
 using Services.Contracts;
 
-namespace MVCApp.Infrastructre.Extensions
+namespace MVCApp.Infrastructure.Extensions
 {
     public static class ServiceExtensions
     {

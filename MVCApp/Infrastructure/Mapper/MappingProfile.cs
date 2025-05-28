@@ -3,7 +3,7 @@ using Entities.DataTransferObjects.Create;
 using Entities.Enums;
 using Entities.Models;
 
-namespace MVCApp.Infrastructre.Mapper
+namespace MVCApp.Infrastructure.Mapper
 {
     public class MappingProfile : Profile
     {

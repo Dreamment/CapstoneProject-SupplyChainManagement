@@ -1,4 +1,4 @@
-using MVCApp.Infrastructre.Extensions;
+using MVCApp.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -5,7 +5,7 @@ using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Repositories.Contratcs;
+using Repositories.Contracts;
 using Services.Contracts;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

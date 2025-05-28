@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Entities.DataTransferObjects.Create;
 using Entities.Models;
-using Repositories.Contratcs;
+using Repositories.Contracts;
 using Services.Contracts;
 
 namespace Services
