@@ -37,19 +37,32 @@
     </div>  
 </div>  
 
-@section Scripts {    
-  <script>    
-      // Automatically show the modal when the page loads    
-      document.addEventListener('DOMContentLoaded', function () {    
-          var modal = new bootstrap.Modal(document.getElementById('SuccessfullLoginModal'));    
-          modal.show();    
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var modalElement = document.getElementById('SuccessfullLoginModal');
+            var modal = new bootstrap.Modal(modalElement);
+            modal.show();
 
-          // Redirect to home page when the modal is closed    
-          document.getElementById('SuccessfullLoginModal').addEventListener('hidden.bs.modal', function () {    
-              window.location.href = '@Model';  
-          });    
-      });    
-  </script>    
+            modalElement.addEventListener('hidden.bs.modal', function () {
+                window.location.href = '@Model';
+            });
+
+            modalElement.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    var btn = modalElement.querySelector('.modal-footer .btn.btn-success');
+                    if (btn) {
+                        btn.click();
+                    }
+                }
+            });
+
+            modalElement.addEventListener('shown.bs.modal', function () {
+                modalElement.focus();
+            });
+            modalElement.setAttribute('tabindex', '-1');
+        });
+    </script>
 }    
 
 <div class="container">  

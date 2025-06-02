@@ -1,10 +1,9 @@
 ﻿namespace Entities.Enums
 {
-    public enum Status
+    public enum TenderStatus
     {
         Open,
         Closed,
         Cancelled
     }
-
 }

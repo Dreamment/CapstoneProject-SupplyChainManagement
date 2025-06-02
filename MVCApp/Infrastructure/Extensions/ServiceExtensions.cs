@@ -5,6 +5,7 @@ using Repositories.Contracts;
 using Repositories.EFCore;
 using Services;
 using Services.Contracts;
+using System.Globalization;
 
 namespace MVCApp.Infrastructure.Extensions
 {
@@ -22,6 +23,7 @@ namespace MVCApp.Infrastructure.Extensions
             services.AddScoped<ITenderService, TenderManager>();
             services.AddScoped<IBidService, BidManager>();
             services.AddScoped<ISupplierService, SupplierManager>();
+            services.AddScoped<ITenderCategoryService, TenderCategoryManager>();
         }
 
         public static void ConfigureIdentity(this IServiceCollection services)
@@ -63,6 +65,41 @@ namespace MVCApp.Infrastructure.Extensions
             {
                 options.AccessDeniedPath = "/Account/AccessDenied";
                 options.ExpireTimeSpan = TimeSpan.FromHours(1);
+            });
+        }
+        
+        public static async Task AddInitialPassword(IRepositoryManager _repositoryManager)
+        {
+            var user = await _repositoryManager.User.FindByConditionAsync(u => u.UserName == "Emre", false);
+            if (user != null)
+            {
+                if (user.PasswordHash != null)
+                {
+                    return;
+                }
+                var passwordHasher = new PasswordHasher<User>();
+                user.PasswordHash = passwordHasher.HashPassword(user, "emre");
+                await _repositoryManager.User.UpdateAsync(user);
+                try
+                {
+                    await _repositoryManager.SaveAsync();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+        public static void ConfigureLocalization(this IServiceCollection services)
+        {
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            var supportedCultures = new[] { new CultureInfo("tr-TR") };
+            services.Configure<Microsoft.AspNetCore.Builder.RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("tr-TR");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
             });
         }
     }

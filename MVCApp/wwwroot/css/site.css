@@ -31,3 +31,69 @@ body {
 .no-spin {
     -moz-appearance: textfield;
 }
+
+.pagination .page-link {
+    transition: background 0.2s, color 0.2s;
+}
+
+.pagination .page-item.active .page-link {
+    background: #0d6efd;
+    color: #fff;
+    border-color: #0d6efd;
+}
+
+.pagination .page-link:hover {
+    background: #e9ecef;
+    color: #0d6efd;
+}
+
+.pagination .page-item {
+    margin: 0 0.18rem;
+}
+
+#scrollToTopBtn {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 1050;
+    display: none;
+    background: #0d6efd;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+#scrollToTopBtn:hover {
+    background: #0b5ed7;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+}
+
+.sticky-top {
+    top: 1rem !important;
+    z-index: 1020;
+}
+
+.card.shadow.mb-4[style*="max-height"] {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+.card.shadow.mb-4[style*="max-height"]::-webkit-scrollbar {
+    width: 8px;
+}
+.card.shadow.mb-4[style*="max-height"]::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+.card.shadow.mb-4[style*="max-height"]::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.tender-index-container {
+    max-width: 85% !important;
+}

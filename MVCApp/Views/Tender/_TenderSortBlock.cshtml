@@ -1,0 +1,32 @@
+﻿@model TenderSortOrder
+
+@{
+    Dictionary<TenderSortOrder, string> SortOrderDisplay = new()
+    {
+        {TenderSortOrder.Id, "Most Relevant"},
+        {TenderSortOrder.TitleAsc , "Title (A–Z)"},
+        {TenderSortOrder.TitleDesc, "Title (Z–A)"},
+        {TenderSortOrder.CreatedAtDesc, "Newest First"},
+        {TenderSortOrder.CreatedAtAsc, "Oldest First"},
+        {TenderSortOrder.DeadlineAsc, "Deadline Soonest"},
+        {TenderSortOrder.DeadlineDesc, "Deadline Latest"}
+    };
+}
+
+<form method="get" id="sortForm">
+    @foreach (var sortOrder in SortOrderDisplay.Keys)
+    {
+        <div class="form-check mb-2">
+            <input class="form-check-input"
+                   type="radio"
+                   name="tenderSortOrder"
+                   id="sort_@sortOrder"
+                   value="@((int)sortOrder)"
+                   @(Model == sortOrder ? "checked" : "")
+                   onchange="document.getElementById('sortForm').submit();" />
+            <label class="form-check-label" for="sort_@sortOrder">
+                @SortOrderDisplay[sortOrder]
+            </label>
+        </div>
+    }
+</form>

@@ -4,12 +4,8 @@ using Entities.Enums;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using Repositories.Contracts;
 using Services.Contracts;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Services
 {
@@ -39,7 +35,6 @@ namespace Services
                 Email = userDTO.Email,
                 UserName = userDTO.UserName,
             };
-
             var user = await _userManager.FindByNameAsync(userDTO.UserName);
             if (user == null)
             {

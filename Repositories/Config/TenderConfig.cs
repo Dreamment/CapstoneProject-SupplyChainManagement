@@ -15,6 +15,11 @@ namespace Repositories.Config
                 .ValueGeneratedOnAdd()
                 .HasColumnName("TenderID");
 
+            builder.Property(t => t.CategoryId)
+                .HasColumnName("CategoryID")
+                .HasColumnType("INT")
+                .IsRequired();
+
             builder.Property(t => t.Title)
                 .HasColumnName("Title")
                 .HasColumnType("VARCHAR(255)")
@@ -42,6 +47,10 @@ namespace Repositories.Config
                 .HasColumnType("TINYINT")
                 .IsRequired();
 
+            builder.HasOne(t => t.Category)
+                .WithMany(tc => tc.Tenders)
+                .HasForeignKey(t => t.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
             builder.HasMany(t => t.Bids)
                 .WithOne(b => b.Tender)
                 .HasForeignKey(b => b.TenderId);

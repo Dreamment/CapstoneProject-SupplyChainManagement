@@ -6,11 +6,11 @@ namespace Repositories.Config
 {
     public class UserConfig : IEntityTypeConfiguration<User>
     {
-        private readonly Guid _userId;
+        private readonly List<Guid> _userIds;
 
-        public UserConfig(Guid userId)
+        public UserConfig(List<Guid> userIds)
         {
-            _userId = userId;
+            _userIds = userIds;
         }
         public void Configure(EntityTypeBuilder<User> builder)
         {
@@ -54,7 +54,7 @@ namespace Repositories.Config
             builder.HasData(
                 new User
                 {
-                    Id = _userId,
+                    Id = _userIds[0],
                     UserName = "Admin",
                     NormalizedUserName = "ADMIN",
                     PasswordHash = "AQAAAAEAACcQAAAAEK1UJlTVFUSnIG7wzErpGrmGlG8/+UwZiCkLEhu8cP+XpYYMznxyZc2sVPsFN3Aytw==",
@@ -64,6 +64,19 @@ namespace Repositories.Config
                     Role_Name = "Admin",
                     Status = true,
                     SecurityStamp = "79e9e60f-e9ac-46a7-8a2c-e055070ec83a"
+                },
+                new User
+                {
+                    Id = _userIds[1],
+                    UserName = "Emre",
+                    NormalizedUserName = "EMRE",
+                    PasswordHash = null,
+                    Email = "emre@emre.com",
+                    NormalizedEmail = "EMRE@EMRE.COM",
+                    PhoneNumber = "987654321",
+                    Role_Name = "Supplier",
+                    Status = true,
+                    SecurityStamp = "b1c2d3e4-f5a6-7b8c-9d0e-f1a2b3c4d5e6"
                 });
         }
     }

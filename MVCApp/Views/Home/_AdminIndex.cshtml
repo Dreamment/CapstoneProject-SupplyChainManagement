@@ -1,0 +1,55 @@
+﻿@model (AdminHomeGetTendersDTO adminHomeGetTendersDTO, string userName)
+
+<div class="container mt-5 mb-5">
+    <h1 class="text-center mb-4">Welcome, Admin @Model.userName!</h1>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Last Bided Tenders</h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.adminHomeGetTendersDTO.LastBidedTenders == null || !Model.adminHomeGetTendersDTO.LastBidedTenders.Any())
+                    {
+                        <div class="p-4 text-center text-muted">No tenders found.</div>
+                    }
+                    else
+                    {
+                        <table class="table table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Deadline</th>
+                                    <th>Supplier</th>
+                                    <th>Bid Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.adminHomeGetTendersDTO.LastBidedTenders.Count; i++)
+                                {
+                                    var tender = Model.adminHomeGetTendersDTO.LastBidedTenders[i];
+                                    var bid = Model.adminHomeGetTendersDTO.LastBids.Count > i ? Model.adminHomeGetTendersDTO.LastBids[i] : null;
+                                    <tr>
+                                        <td>@tender.Title</td>
+                                        <td>@tender.Deadline.ToString("dd-MM-yyyy")</td>
+                                        <td>@(bid.SupplierName)</td>
+                                        <td>
+                                            @if (bid != null && bid.TenderId == tender.TenderId)
+                                            {
+                                                @bid.Amount.ToString("C")
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">-</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

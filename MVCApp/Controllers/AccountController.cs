@@ -25,9 +25,12 @@ namespace MVCApp.Controllers
         [HttpGet]
         public IActionResult Login([FromQuery] string ReturnURL = "/")
         {
+            if (ReturnURL.Contains("register") || 
+                ReturnURL.Contains("accessdenied") ||
+                ReturnURL.Contains("login"))
+                ReturnURL = "/";
             bool isloggedIn = User.Identity.IsAuthenticated;
             if (isloggedIn)
-                // redirect to the return URL if the user is already logged in
                 return Redirect(ReturnURL);
             return View((ReturnURL, new LoginUserDTO()));
         }
@@ -48,6 +51,14 @@ namespace MVCApp.Controllers
                         ModelState.AddModelError("", "Something went wrong during login. Please try again./n" +
                             "If the problem persists, contact support.");
                         return View((returnUrl, userDTO));
+                    }
+                    var user = await _signInManager.UserManager.GetUserAsync(User);
+                    if (user.Role_Name != "Supplier" && user.Role_Name != "Admin")
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("AccessDenied",
+                            "Account",
+                            new { returnUrl = "NotRegistered" });
                     }
                     TempData["UserDTO"] = JsonSerializer.Serialize(userDTO);
                     return RedirectToAction("LoginSuccessfull", new { returnUrl });

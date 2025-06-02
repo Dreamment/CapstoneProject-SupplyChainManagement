@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repositories.EFCore;
 
@@ -11,9 +12,11 @@ using Repositories.EFCore;
 namespace MVCApp.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20250602153733_RemovePurchaserRole")]
+    partial class RemovePurchaserRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -648,20 +651,6 @@ namespace MVCApp.Migrations
                         .IsUnique();
 
                     b.ToTable("Suppliers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            SupplierName = "Emre",
-                            Address = "Emre",
-                            ContactPerson = "Emre",
-                            Country = "Emre",
-                            Email = "emre@emre.com",
-                            IsActive = true,
-                            TaxId = "1234567890",
-                            Telephone = "987654321",
-                            Username = "Emre"
-                        });
                 });
 
             modelBuilder.Entity("Entities.Models.Tender", b =>
@@ -853,7 +842,7 @@ namespace MVCApp.Migrations
                         {
                             Id = new Guid("c7780a04-a2ec-43e3-b25c-d26ea34e1340"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cebb3184-62ea-4124-ba99-cd4cff343a83",
+                            ConcurrencyStamp = "9566d685-bd9d-40a8-8a61-26fb2f0c5a07",
                             Email = "admin@admin.com",
                             EmailConfirmed = "0",
                             LockoutEnabled = false,
@@ -868,25 +857,6 @@ namespace MVCApp.Migrations
                             Status = true,
                             TwoFactorEnabled = false,
                             UserName = "Admin"
-                        },
-                        new
-                        {
-                            Id = new Guid("a4d69dbb-1ff6-4d01-8cca-24b210bb0ed4"),
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "2eb65712-ac68-439b-9429-f959afaf75e8",
-                            Email = "emre@emre.com",
-                            EmailConfirmed = "0",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "EMRE@EMRE.COM",
-                            NormalizedUserName = "EMRE",
-                            PhoneNumber = "987654321",
-                            PhoneNumberConfirmed = "0",
-                            Role_Name = "Supplier",
-                            Salary = 0f,
-                            SecurityStamp = "b1c2d3e4-f5a6-7b8c-9d0e-f1a2b3c4d5e6",
-                            Status = true,
-                            TwoFactorEnabled = false,
-                            UserName = "Emre"
                         });
                 });
 
@@ -981,8 +951,13 @@ namespace MVCApp.Migrations
                         },
                         new
                         {
-                            UserId = new Guid("a4d69dbb-1ff6-4d01-8cca-24b210bb0ed4"),
+                            UserId = new Guid("c7780a04-a2ec-43e3-b25c-d26ea34e1340"),
                             RoleId = new Guid("2cfca43a-c260-44db-950f-ef75d58f4259")
+                        },
+                        new
+                        {
+                            UserId = new Guid("c7780a04-a2ec-43e3-b25c-d26ea34e1340"),
+                            RoleId = new Guid("cc0b8568-8ac2-4a8b-b341-fc517a7d75ff")
                         });
                 });
 

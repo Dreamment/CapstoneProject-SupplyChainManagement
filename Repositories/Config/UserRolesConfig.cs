@@ -6,12 +6,12 @@ namespace Repositories.Config
 {
     public class UserRolesConfig : IEntityTypeConfiguration<IdentityUserRole<Guid>>
     {
-        private readonly Guid _userId;
+        private readonly List<Guid> _userIds;
         private readonly List<Guid> _roleIds;
 
-        public UserRolesConfig(Guid userId, List<Guid> roleIds)
+        public UserRolesConfig(List<Guid> userIds, List<Guid> roleIds)
         {
-            _userId = userId;
+            _userIds = userIds;
             _roleIds = roleIds;
         }
 
@@ -22,24 +22,15 @@ namespace Repositories.Config
             builder.HasData(
                 new IdentityUserRole<Guid>
                 {
-                    UserId = _userId,
-                    RoleId = _roleIds[0] // Admin role
+                    UserId = _userIds[0],
+                    RoleId = _roleIds[0]
                 },
                 new IdentityUserRole<Guid>
                 {
-                    UserId = _userId,
-                    RoleId = _roleIds[1] // Purchaser role
-                },
-                new IdentityUserRole<Guid>
-                {
-                    UserId = _userId,
-                    RoleId = _roleIds[2] // Supplier role
-                },
-                new IdentityUserRole<Guid>
-                {
-                    UserId = _userId,
-                    RoleId = _roleIds[3] // User role
+                    UserId = _userIds[1],
+                    RoleId = _roleIds[1]
                 }
+
             );
         }
     }

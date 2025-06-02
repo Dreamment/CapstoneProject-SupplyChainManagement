@@ -1,0 +1,102 @@
+﻿@model (SupplierHomeGetTendersDTO supplierHomeGetTendersDTO, string userName)
+
+<div class="container mt-5 mb-5">
+    <h1 class="text-center mb-4">Welcome, Supplier @Model.userName!</h1>
+    <div class="row justify-content-center">
+        <!-- Not Bidded Tenders Card -->
+        <div class="col-12 col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="border-top border-3 border-secondary"></div>
+                <div class="card-body">
+                    <h5 class="mb-4 text-center">
+                        <i class="fa-solid fa-circle-minus text-secondary me-2"></i>
+                        Not Bidded
+                    </h5>
+                    @if (Model.supplierHomeGetTendersDTO.NotBiddedTenders.Count == 0)
+                    {
+                        <div class="text-muted text-center">No tenders</div>
+                    }
+                    else
+                    {
+                        @foreach (var tender in Model.supplierHomeGetTendersDTO.NotBiddedTenders)
+                        {
+                            <div class="d-flex align-items-center justify-content-between border-bottom py-2">
+                                <span class="fw-bold flex-grow-1 text-start">@tender.Title</span>
+                                <span class="badge bg-secondary mx-2">
+                                    <i class="fa-solid fa-gavel"></i> Not Bidded
+                                </span>
+                                <a asp-controller="Tender" asp-action="Details" asp-route-tenderId="@tender.TenderId" class="btn btn-link p-0 ms-2">
+                                    <i class="fa-solid fa-info-circle"></i> Details
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <!-- Accepted Bid Tenders Card -->
+        <div class="col-12 col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="border-top border-3 border-success"></div>
+                <div class="card-body">
+                    <h5 class="mb-4 text-center">
+                        <i class="fa-solid fa-circle-check text-success me-2"></i>
+                        Accepted
+                    </h5>
+                    @if (Model.supplierHomeGetTendersDTO.AcceptedBidTenders.Count == 0)
+                    {
+                        <div class="text-muted text-center">No tenders</div>
+                    }
+                    else
+                    {
+                        @foreach (var tender in Model.supplierHomeGetTendersDTO.AcceptedBidTenders)
+                        {
+                            var bid = tender.Bids.FirstOrDefault(b => b.Status == BidStatus.Accepted);
+                            <div class="d-flex align-items-center justify-content-between border-bottom py-2">
+                                <span class="fw-bold flex-grow-1 text-start">@tender.Title</span>
+                                <span class="badge bg-success mx-2">
+                                    <i class="fa-solid fa-gavel"></i> @((bid != null) ? bid.Amount.ToString("C") : "-")
+                                </span>
+                                <a asp-controller="Tender" asp-action="Details" asp-route-tenderId="@tender.TenderId" class="btn btn-link p-0 ms-2">
+                                    <i class="fa-solid fa-info-circle"></i> Details
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <!-- Rejected Bid Tenders Card -->
+        <div class="col-12 col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="border-top border-3 border-danger"></div>
+                <div class="card-body">
+                    <h5 class="mb-4 text-center">
+                        <i class="fa-solid fa-circle-xmark text-danger me-2"></i>
+                        Rejected
+                    </h5>
+                    @if (Model.supplierHomeGetTendersDTO.RejectedBidTenders.Count == 0)
+                    {
+                        <div class="text-muted text-center">No tenders</div>
+                    }
+                    else
+                    {
+                        @foreach (var tender in Model.supplierHomeGetTendersDTO.RejectedBidTenders)
+                        {
+                            var bid = tender.Bids.FirstOrDefault(b => b.Status == BidStatus.Rejected);
+                            <div class="d-flex align-items-center justify-content-between border-bottom py-2">
+                                <span class="fw-bold flex-grow-1 text-start">@tender.Title</span>
+                                <span class="badge bg-danger mx-2">
+                                    <i class="fa-solid fa-gavel"></i> @((bid != null) ? bid.Amount.ToString("C") : "-")
+                                </span>
+                                <a asp-controller="Tender" asp-action="Details" asp-route-tenderId="@tender.TenderId" class="btn btn-link p-0 ms-2">
+                                    <i class="fa-solid fa-info-circle"></i> Details
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

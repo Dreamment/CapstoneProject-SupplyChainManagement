@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Repositories.Config
 {
-    public class ActiveAccepnaceControlConfig : IEntityTypeConfiguration<ActiveAcceptanceControl>
+    public class ActiveAcceptanceControlConfig : IEntityTypeConfiguration<ActiveAcceptanceControl>
     {
         public void Configure(EntityTypeBuilder<ActiveAcceptanceControl> builder)
         {

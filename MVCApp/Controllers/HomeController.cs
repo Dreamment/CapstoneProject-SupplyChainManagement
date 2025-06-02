@@ -1,21 +1,46 @@
+using Entities.DataTransferObjects.Home;
+using Entities.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MVCApp.Models;
+using Services.Contracts;
 using System.Diagnostics;
 
 namespace MVCApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly SignInManager<User> _signInManager;
+        private readonly ITenderService _tenderService;
+        private readonly ISupplierService _supplierService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(SignInManager<User> signInManager, ITenderService tenderService, ISupplierService supplierService)
         {
-            _logger = logger;
+            _signInManager = signInManager;
+            _tenderService = tenderService;
+            _supplierService = supplierService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var user = await _signInManager.UserManager.GetUserAsync(User);
+            HomeViewModel homeViewModel = new();
+            if (user == null)
+            {
+                return View(homeViewModel);
+            }
+            homeViewModel.UserName = user.UserName;
+            homeViewModel.RoleName = user.Role_Name;
+
+            if (user.Role_Name == "Supplier")
+            {
+                homeViewModel.SupplierHomeGetTendersDTO = await _tenderService.GetSupplierHomeGetTendersDTO(user, 5, true);
+            }
+            else if (user.Role_Name == "Admin")
+            {
+                homeViewModel.AdminHomeGetTendersDTO = await _tenderService.GetAdminHomeTenders();
+            }
+            return View(homeViewModel);
         }
 
         public IActionResult Privacy()

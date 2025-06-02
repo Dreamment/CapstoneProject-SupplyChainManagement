@@ -11,14 +11,15 @@ namespace Repositories.Contracts
         IRepositoryBase<Bid> Bid { get; }
         IRepositoryBase<Invoice> Invoice { get; }
         IRepositoryBase<Location> Location { get; }
+        IRepositoryBase<OldBid> OldBid { get; }
         IRepositoryBase<PurchaseOrder> PurchaseOrder { get; }
         IRepositoryBase<RawMaterialData> RawMaterialData { get; }
         IRepositoryBase<Role> Role { get; }
         IRepositoryBase<Supplier> Supplier { get; }
         IRepositoryBase<Tender> Tender { get; }
-        IRepositoryBase<User> User { get; }
+        IRepositoryBase<TenderCategory> TenderCategory { get; }
         IRepositoryBase<TenderSupplier> TenderSupplier { get; }
-        IRepositoryBase<OldBid> OldBid { get; }
+        IRepositoryBase<User> User { get; }
         Task SaveAsync();
     }
 }

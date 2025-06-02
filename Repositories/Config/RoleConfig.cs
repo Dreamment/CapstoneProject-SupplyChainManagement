@@ -88,7 +88,7 @@ namespace Repositories.Config
                 .HasColumnName("Parameters")
                 .HasColumnType("bit");
 
-            List<string> roleNames = ["Admin", "Purchaser", "Supplier", "User"];
+            List<string> roleNames = ["Admin", "Supplier", "User"];
             List<Role> roles = [];
             for (int i = 0; i < _roleIds.Count; i++)
             {

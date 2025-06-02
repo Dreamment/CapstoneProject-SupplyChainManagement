@@ -1,7 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model HomeViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-</div>
+@if(Model.RoleName == "Supplier")
+{
+    <partial name="_SupplierIndex" model="(Model.SupplierHomeGetTendersDTO, Model.UserName)" />
+}
+else if (Model.RoleName == "Admin")
+{
+    <partial name="_AdminIndex" model="(Model.AdminHomeGetTendersDTO, Model.UserName)" />
+}

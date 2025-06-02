@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Repositories.Config
 {
-    public class ActivePurchaseOderListConfig : IEntityTypeConfiguration<ActivePurchaseOrderList>
+    public class ActivePurchaseOrderListConfig : IEntityTypeConfiguration<ActivePurchaseOrderList>
     {
         public void Configure(EntityTypeBuilder<ActivePurchaseOrderList> builder)
         {

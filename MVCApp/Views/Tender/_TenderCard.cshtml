@@ -1,0 +1,74 @@
+﻿@model (Tender tender, TenderSupplier tenderSupplier)
+
+@{
+    string bidStatusText = "Not Bidded";
+    string bidStatusClass = "secondary";
+    if (Model.tenderSupplier?.Bid is not null)
+    {
+        switch (Model.tenderSupplier.Bid.Status)
+        {
+            case BidStatus.Accepted:
+                bidStatusText = "Accepted";
+                bidStatusClass = "success";
+                break;
+            case BidStatus.Rejected:
+                bidStatusText = "Rejected";
+                bidStatusClass = "danger";
+                break;
+            default:
+                bidStatusText = "Pending";
+                bidStatusClass = "warning";
+                break;
+        }
+    }
+    else if (Model.tender.Status == TenderStatus.Closed)
+    {
+        bidStatusText = "Closed";
+        bidStatusClass = "dark";
+    }
+    else if (Model.tender.Status == TenderStatus.Cancelled)
+    {
+        bidStatusText = "Cancelled";
+        bidStatusClass = "danger";
+    }
+
+    string tenderStatusClass = Model.tender.Status switch
+    {
+        TenderStatus.Open => "success",
+        TenderStatus.Closed => "secondary",
+        TenderStatus.Cancelled => "danger",
+        _ => "secondary"
+    };
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body d-flex flex-column">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="fa-solid fa-file-contract fa-2x text-primary me-2"></i>
+                    <h5 class="card-title mb-0">@Model.tender.Title</h5>
+                </div>
+                <p class="card-text text-muted mb-2" style="min-height: 48px;">@Model.tender.Description</p>
+                <div class="mb-2">
+                    <span class="badge bg-@bidStatusClass me-1">
+                        <i class="fa-solid fa-gavel"></i> @bidStatusText
+                    </span>
+                    <span class="badge bg-@tenderStatusClass">
+                        <i class="fa-solid fa-circle-info"></i> @Model.tender.Status
+                    </span>
+                </div>
+                <div class="mb-2 small text-muted">
+                    <i class="fa-regular fa-calendar-plus"></i> Created: @Model.tender.CreatedAt.ToShortDateString()
+                    <span class="ms-3"><i class="fa-regular fa-clock"></i> Deadline: @Model.tender.Deadline.ToShortDateString()</span>
+                </div>
+                <div class="mt-auto">
+                    <a asp-controller="Tender"
+                       asp-action="Details"
+                       asp-route-tenderId="@Model.tender.TenderId"
+                       class="btn btn-outline-primary w-100"
+                       target="_blank">
+                        <i class="fa-solid fa-info-circle"></i> Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

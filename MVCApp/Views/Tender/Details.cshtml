@@ -1,14 +1,14 @@
 ﻿@{
     ViewData["Title"] = "Tender Details";
 }
-@model (Tender tender, bool isBidded)
+@model TenderDetailsViewModel
 
 <div class="container mt-4">
     <div class="card shadow">
         <div class="card-body">
             <h3 class="card-title mb-3">
                 <i class="fa fa-file-contract text-primary me-2"></i>
-                @Model.tender.Title
+                @Model.Tender.Title
             </h3>
             <div class="mb-4">
                 <h5>
@@ -16,7 +16,7 @@
                     Description
                 </h5>
                 <div class="border rounded p-3 bg-light">
-                    @Model.tender.Description
+                    @Model.Tender.Description
                 </div>
             </div>
             <div class="mb-4">
@@ -25,46 +25,84 @@
                     Contract Details
                 </h5>
                 <div class="border rounded p-3 bg-light">
-                    @Html.Raw(Model.tender.ContractDetails?.Replace("\r\n", "<br/>").Replace("\n", "<br/>").Replace("\\n", "<br/>"))
+                    @Html.Raw(Model.Tender.ContractDetails?.Replace("\r\n", "<br/>").Replace("\n", "<br/>").Replace("\\n", "<br/>"))
                 </div>
             </div>
-            <div class="row mb-4">
-                <div class="col-md-6">
+            <div class="row mb-4 align-items-center">
+                <div class="@(Model.Bid != null ? "col-md-4" : "col-md-6") mb-2 mb-md-0">
                     <span class="fw-semibold">
                         <i class="fa fa-hourglass-end text-warning me-1"></i>
                         Deadline:
                     </span>
                     <span class="badge
-                        @(Model.tender.Deadline < DateTime.Now ?
-                                                      "bg-danger text-light" :
-                                                      "bg-warning text-dark")">
-                        @Model.tender.Deadline.ToString("yyyy-MM-dd HH:mm")
+                        @(Model.Tender.Deadline < DateTime.Now ? "bg-danger text-light" : "bg-warning text-dark")">
+                        @Model.Tender.Deadline.ToString("yyyy-MM-dd HH:mm")
                     </span>
                 </div>
-                <div class="col-md-6">
+                <div class="@(Model.Bid != null ? "col-md-4" : "col-md-6") mb-2 mb-md-0">
                     <span class="fw-semibold">
                         <i class="fa fa-info-circle text-info me-1"></i>
                         Status:
                     </span>
                     <span class="badge
-                        @(  Model.tender.Status == Status.Open      ? "bg-success" :
-                            Model.tender.Status == Status.Closed    ? "bg-secondary" :
-                                                                      "bg-danger")">
-                        @Model.tender.Status
+                        @(Model.Tender.Status == TenderStatus.Open ? "bg-success" :
+                                                    Model.Tender.Status == TenderStatus.Closed ? "bg-secondary" :
+                                                    "bg-danger")">
+                        @Model.Tender.Status
                     </span>
                 </div>
+                @if (Model.Bid != null)
+                {
+                    <div class="col-md-4">
+                        <span class="badge bg-primary">
+                            <i class="fa fa-gavel me-1"></i>
+                            Your Bid: @Model.Bid.Amount.ToString("C")
+                        </span>
+                    </div>
+                }
             </div>
+            @{
+                bool isDisabled =
+                    Model.Tender.Status == TenderStatus.Cancelled ||
+                    Model.Tender.Status == TenderStatus.Closed ||
+                    Model.Tender.Deadline < DateTime.Now ||
+                    Model.Tender.CreatedAt > DateTime.Now;
+                string disabledReason = "";
+                if (Model.Tender.Status == TenderStatus.Cancelled)
+                {
+                    disabledReason = "This tender has been cancelled. You cannot bid.";
+                }
+                else if (Model.Tender.Status == TenderStatus.Closed)
+                {
+                    disabledReason = "This tender is closed. You cannot bid.";
+                }
+                else if (Model.Tender.CreatedAt > DateTime.Now)
+                {
+                    disabledReason = $"This tender will open on {Model.Tender.CreatedAt:yyyy-MM-dd HH:mm}. You cannot bid yet.";
+                }
+                else if (Model.Tender.Deadline < DateTime.Now)
+                {
+                    disabledReason = "The deadline for this tender has passed. You cannot bid.";
+                }
+            }
             <form asp-action="Bid" method="get" class="mt-3" id="bidForm">
-                <input type="hidden" name="tenderId" value="@Model.tender.TenderId" />
+                <input type="hidden" name="tenderId" value="@Model.Tender.TenderId" />
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" id="acceptContract" required>
+                    @if (isDisabled)
+                    {
+                        <div class="alert alert-warning py-2 mb-2" role="alert">
+                            @disabledReason
+                        </div>
+                    }
+                    <input class="form-check-input" type="checkbox" id="acceptContract" required
+                           @(isDisabled ? "disabled" : "")>
                     <label class="form-check-label" for="acceptContract">
                         I have read and accept the contract terms
                     </label>
                 </div>
                 <button type="submit" class="btn btn-primary" id="makeBidBtn" disabled>
                     <i class="fa fa-gavel me-1"></i>
-                    @(Model.isBidded ? "Change Bid" : "Make a Bid")
+                    @(Model.Bid != null ? "Change Bid" : "Make a Bid")
                 </button>
             </form>
         </div>
@@ -73,8 +111,11 @@
 
 @section Scripts {
     <script>
-        document.getElementById('acceptContract').addEventListener('change', function () {
-            document.getElementById('makeBidBtn').disabled = !this.checked;
+        document.getElementById('acceptContract')?.addEventListener('change', function () {
+            var makeBidBtn = document.getElementById('makeBidBtn');
+            if (makeBidBtn && !this.disabled) {
+                makeBidBtn.disabled = !this.checked;
+            }
         });
     </script>
 }

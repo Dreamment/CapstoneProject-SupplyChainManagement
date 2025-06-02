@@ -56,6 +56,20 @@ namespace Repositories.Config
             builder.HasMany(s => s.Bids)
                 .WithOne(b => b.Supplier)
                 .HasForeignKey(b => b.SupplierName);
+
+            builder.HasData(
+                new Supplier
+                {
+                    SupplierName = "Emre",
+                    Address = "Emre",
+                    Country = "Emre",
+                    ContactPerson = "Emre",
+                    Telephone = "987654321",
+                    Email = "emre@emre.com",
+                    TaxId = "1234567890",
+                    IsActive = true,
+                    Username = "Emre",
+                });
         }
     }
 }

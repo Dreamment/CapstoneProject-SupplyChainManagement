@@ -1,84 +1,59 @@
 ﻿@{
     ViewData["Title"] = "Tenders";
 }
-@model (IEnumerable<Tender> tenders, IEnumerable<TenderSupplier> tenderSupplier)
+@model TenderIndexViewModel
 
-<div class="container py-4">
-    <h2 class="mb-4"><i class="fa-solid fa-clipboard-list text-primary"></i> Tenders</h2>
-    <div class="row g-4">
-        @foreach (var tender in Model.tenders)
-        {
-            var currentTenderSupplier = Model.tenderSupplier.FirstOrDefault(ts => ts.TenderId == tender.TenderId);
-
-            string bidStatusText = "Not Bidded";
-            string bidStatusClass = "secondary";
-            if (currentTenderSupplier?.Bid is not null)
-            {
-                switch (currentTenderSupplier.Bid.Status)
-                {
-                    case BidStatus.Accepted:
-                        bidStatusText = "Accepted";
-                        bidStatusClass = "success";
-                        break;
-                    case BidStatus.Rejected:
-                        bidStatusText = "Rejected";
-                        bidStatusClass = "danger";
-                        break;
-                    default:
-                        bidStatusText = "Pending";
-                        bidStatusClass = "warning";
-                        break;
-                }
-            }
-            else if (tender.Status == Status.Closed)
-            {
-                bidStatusText = "Closed";
-                bidStatusClass = "dark";
-            }
-            else if (tender.Status == Status.Cancelled)
-            {
-                bidStatusText = "Cancelled";
-                bidStatusClass = "danger";
-            }
-
-            string tenderStatusClass = tender.Status switch
-            {
-                Status.Open => "success",
-                Status.Closed => "secondary",
-                Status.Cancelled => "danger",
-                _ => "secondary"
-            };
-            <div class="col-md-6 col-lg-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="fa-solid fa-file-contract fa-2x text-primary me-2"></i>
-                            <h5 class="card-title mb-0">@tender.Title</h5>
-                        </div>
-                        <p class="card-text text-muted mb-2" style="min-height: 48px;">@tender.Description</p>
-                        <div class="mb-2">
-                            <span class="badge bg-@bidStatusClass me-1">
-                                <i class="fa-solid fa-gavel"></i> @bidStatusText
-                            </span>
-                            <span class="badge bg-@tenderStatusClass">
-                                <i class="fa-solid fa-circle-info"></i> @tender.Status
-                            </span>
-                        </div>
-                        <div class="mb-2 small text-muted">
-                            <i class="fa-regular fa-calendar-plus"></i> Created: @tender.CreatedAt.ToShortDateString()
-                            <span class="ms-3"><i class="fa-regular fa-clock"></i> Deadline: @tender.Deadline.ToShortDateString()</span>
-                        </div>
-                        <div class="mt-auto">
-                            <a asp-controller="Tender"
-                               asp-action="Details"
-                               asp-route-tenderId="@tender.TenderId"
-                               class="btn btn-outline-primary w-100">
-                                <i class="fa-solid fa-info-circle"></i> Details
-                            </a>
-                        </div>
+<div class="container-fluid py-4">
+    <div class="row">
+        <h2 class="mb-4"><i class="fa-solid fa-clipboard-list text-primary"></i> Tenders</h2>
+        <div class="col-md-3">
+            <div class="sticky-top" style="top: 90px; z-index: 1020;">
+                <div class="card shadow mb-4" style="max-height: 85vh; overflow-y: auto;">
+                    <div class="card-header bg-secondary text-white">
+                        <i class="fa-solid fa-sort"></i> Sort
+                    </div>
+                    <div class="card-body border-bottom pb-2 mb-2">
+                        @await Html.PartialAsync("_TenderSortBlock", Model.SortOrder)
+                    </div>
+                    <div class="card-header bg-primary text-white">
+                        <i class="fa-solid fa-filter"></i> Filter
+                    </div>
+                    <div class="card-body">
+                        @await Html.PartialAsync("_TenderFilterBlock", Model)
                     </div>
                 </div>
             </div>
-        }
+        </div>
+        <div class="col-md-9">
+            <div class="row g-4">
+                @foreach (var tender in Model.Tenders)
+                {
+                    var currentTenderSupplier = Model.TenderSupplier.FirstOrDefault(ts => ts.TenderId == tender.TenderId);
+                    <partial name="_TenderCard" model="(tender, currentTenderSupplier)" />
+                }
+            </div>
+            <partial name="_Pagination" model="Model" />
+        </div>
     </div>
 </div>
+
+<button id="scrollToTopBtn" title="Back to Top" class="btn">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+@section Scripts {
+    <script>
+        window.addEventListener('scroll', function () {
+            var btn = document.getElementById('scrollToTopBtn');
+            if (window.scrollY > 200) {
+                btn.style.display = 'block';
+            } else {
+                btn.style.display = 'none';
+            }
+        });
+
+        document.getElementById('scrollToTopBtn').addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+}

@@ -8,6 +8,8 @@ namespace Entities.Models
     {
         public int TenderId { get; set; }
 
+        public int CategoryId { get; set; }
+
         public string Title { get; set; }
 
         public string Description { get; set; }
@@ -19,7 +21,9 @@ namespace Entities.Models
         [Required]
         public DateTime Deadline { get; set; }
 
-        public Status Status { get; set; }
+        public TenderStatus Status { get; set; }
+
+        public TenderCategory Category { get; set; }
 
         public List<Bid> Bids { get; set; }
 

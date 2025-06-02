@@ -1,0 +1,104 @@
+﻿@model MVCApp.Models.TenderIndexViewModel
+
+@functions {
+    public int ClampPage(int page)
+    {
+        if (page < 1) return 1;
+        if (page > Model.TotalPages) return Model.TotalPages;
+        return page;
+    }
+
+    public string BuildQuery(int page, string keyword, List<int> categoryIds, List<BidStatus> bidStatuses, List<TenderStatus> tenderStatuses, int pageSize)
+    {
+        page = ClampPage(page);
+        var query = $"?page={page}&keyword={keyword ?? ""}&pageSize={pageSize}";
+        if (categoryIds != null)
+            foreach (var id in categoryIds)
+                query += $"&categoryIds={id}";
+        if (bidStatuses != null)
+            foreach (var status in bidStatuses)
+                query += $"&bidStatuses={(int)status}";
+        if (tenderStatuses != null)
+            foreach (var status in tenderStatuses)
+                query += $"&tenderStatuses={(int)status}";
+        return query;
+    }
+}
+
+@if (Model.TotalPages > 1)
+{
+    <nav aria-label="Tender pagination" class="mt-4">
+        <ul class="pagination pagination-sm justify-content-center rounded-pill shadow-sm" style="--bs-pagination-padding-x:1.1rem; --bs-pagination-padding-y:0.45rem;">
+            <li class="page-item my-2 @(Model.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link rounded-pill"
+                   href="@Url.Action("Index")@BuildQuery(1, Model.TenderFilter.Title, Model.TenderFilter.CategoryIds, Model.TenderFilter.BidStatuses, Model.TenderFilter.TenderStatuses, Model.PageSize)"
+                   aria-label="First">
+                    <i class="fa-solid fa-angles-left"></i>
+                </a>
+            </li>
+            <li class="page-item my-2 @(Model.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link rounded-pill"
+                   href="@Url.Action("Index")@BuildQuery(Model.CurrentPage - 1, Model.TenderFilter.Title, Model.TenderFilter.CategoryIds, Model.TenderFilter.BidStatuses, Model.TenderFilter.TenderStatuses, Model.PageSize)"
+                   aria-label="Previous">
+                    <i class="fa-solid fa-angle-left"></i>
+                </a>
+            </li>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                if (i == 1 || i == Model.TotalPages || Math.Abs(i - Model.CurrentPage) <= 1)
+                {
+                    <li class="page-item my-2 @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link rounded-pill"
+                           href="@Url.Action("Index")@BuildQuery(i, Model.TenderFilter.Title, Model.TenderFilter.CategoryIds, Model.TenderFilter.BidStatuses, Model.TenderFilter.TenderStatuses, Model.PageSize)">
+                            @i
+                        </a>
+                    </li>
+                }
+                else if (i == Model.CurrentPage - 2 || i == Model.CurrentPage + 2)
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link rounded-pill">…</span>
+                    </li>
+                }
+            }
+            <li class="page-item my-2 @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link rounded-pill"
+                   href="@Url.Action("Index")@BuildQuery(Model.CurrentPage + 1, Model.TenderFilter.Title, Model.TenderFilter.CategoryIds, Model.TenderFilter.BidStatuses, Model.TenderFilter.TenderStatuses, Model.PageSize)"
+                   aria-label="Next">
+                    <i class="fa-solid fa-angle-right"></i>
+                </a>
+            </li>
+            <li class="page-item my-2 @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link rounded-pill"
+                   href="@Url.Action("Index")@BuildQuery(Model.TotalPages, Model.TenderFilter.Title, Model.TenderFilter.CategoryIds, Model.TenderFilter.BidStatuses, Model.TenderFilter.TenderStatuses, Model.PageSize)"
+                   aria-label="Last">
+                    <i class="fa-solid fa-angles-right"></i>
+                </a>
+            </li>
+            <li class="page-item ms-3 align-self-center">
+                <form method="get" class="d-inline">
+                    <input type="hidden" name="page" value="1" />
+                    <input type="hidden" name="keyword" value="@Model.TenderFilter.Title" />
+                    @foreach (var id in Model.TenderFilter.CategoryIds)
+                    {
+                        <input type="hidden" name="categoryIds" value="@id" />
+                    }
+                    @foreach (var status in Model.TenderFilter.BidStatuses)
+                    {
+                        <input type="hidden" name="bidStatuses" value="@status" />
+                    }
+                    @foreach (var status in Model.TenderFilter.TenderStatuses)
+                    {
+                        <input type="hidden" name="tenderStatuses" value="@status" />
+                    }
+                    <div class="btn-group" role="group" aria-label="Page size">
+                        @foreach (var size in new[] { 15, 30, 45 })
+                        {
+                            <button type="submit" name="pageSize" value="@size" class="btn btn-outline-primary btn-sm @(Model.PageSize == size ? "active" : "")">@size</button>
+                        }
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </nav>
+}
